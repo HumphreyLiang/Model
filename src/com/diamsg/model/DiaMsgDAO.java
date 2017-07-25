@@ -35,11 +35,11 @@ public class DiaMsgDAO implements DiaMsgDAO_Interface{
 	private static final String INSERT = 
 			"INSERT INTO DIAMSG(DIAMSGNO, DIANO, MEMNO, DIAMSGTEXT, DIAMSGDATE, DIAMSGSTATE) VALUES(DIAMSG_SEQ.NEXTVAL ,?,?,?,?,?)";
 	private static final String GETALL = 
-			"SELECT DIAMSGNO, DIANO, MEMNO, DIAMSGTEXT, DIAMSGDATE, DIAMSGSTATE FROM DIAMSG ORDER BY DIAMSGDATE";
+			"SELECT DIAMSGNO, DIANO, MEMNO, DIAMSGTEXT, DIAMSGTIME, DIAMSGSTATE FROM DIAMSG ORDER BY DIAMSGTIME";
 	private static final String GETONE =
-			"SELECT DIAMSGNO, DIANO, MEMNO, DIAMSGTEXT, DIAMSGDATE, DIAMSGSTATE FROM DIAMSG WHERE DIAMSGNO = ? ";
+			"SELECT DIAMSGNO, DIANO, MEMNO, DIAMSGTEXT, DIAMSGTIME, DIAMSGSTATE FROM DIAMSG WHERE DIAMSGNO = ? ";
 	private static final String UPDATE =
-			"UPDATE DIAMSG SET DIAMSGTEXT=?, DIAMSGDATE=? WHERE DIAMSGNO=?";
+			"UPDATE DIAMSG SET DIAMSGTEXT=?, DIAMSGTIME=? WHERE DIAMSGNO=?";
 	private static final String DELETE=
 			"DELETE FROM DIAMSG WHERE DIAMSGNO=?";
 	
@@ -177,7 +177,7 @@ public class DiaMsgDAO implements DiaMsgDAO_Interface{
 				diaMsg.setDiaNO(rs.getInt("diano"));
 				diaMsg.setMemNo(rs.getInt("memno"));
 				diaMsg.setDiaMsgText(rs.getString("diamsgtext"));
-				diaMsg.setDiaMsgTime(rs.getTimestamp("diamsgdate"));
+				diaMsg.setDiaMsgTime(rs.getTimestamp("diamsgtime"));
 				diaMsg.setDiaMsgState(rs.getInt("diamsgstate"));
 				
 				} 
@@ -233,7 +233,7 @@ public class DiaMsgDAO implements DiaMsgDAO_Interface{
 				diaMsg.setDiaNO(rs.getInt("diano"));
 				diaMsg.setMemNo(rs.getInt("memno"));
 				diaMsg.setDiaMsgText(rs.getString("diamsgtext"));
-				diaMsg.setDiaMsgTime(rs.getTimestamp("diamsgdate"));
+				diaMsg.setDiaMsgTime(rs.getTimestamp("diamsgtime"));
 				diaMsg.setDiaMsgState(rs.getInt("diamsgstate"));
 				list.add(diaMsg);
 			}

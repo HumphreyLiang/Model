@@ -6,6 +6,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Base64;
+import java.util.Base64.Encoder;
 import java.util.List;
 
 import javax.naming.Context;
@@ -35,7 +37,7 @@ public class DiaryDAO implements DiaryDAO_Interface{
 			"INSERT INTO DIARY(diano, memno, dianame, diatext, diaimg, diacretime, diamodtime, diastate)"+
 					"VALUES (DIARY_SEQ.NEXTVAL,?,?,?,?,?,?,?)";
 	private static final String GETALL = 
-			"SELECT DIANO,MEMNO,DIANAME, DIATEXT, DIAIMG, DIACRETIME, DIAMODTIME, DIASTATE FROM DIARY";
+			"SELECT DIANO,MEMNO,DIANAME, DIATEXT, DIAIMG, DIACRETIME, DIAMODTIME, DIASTATE FROM DIARY ORDER BY DIACRETIME DESC";
 //			"SELECT DIANO,MEMNO,DIANAME, DIATEXT, DIAIMG, TO_CHAR(DIACREDATE,'YYYY-MM-DD HH12:MI:SS AM') DIACREDATE, TO_CHAR(DIAMODDATE,'YYYY-MM-DD HH12:MI:SS AM') DIAMODDATE, DIASTATE FROM DIARY";
 	private static final String GETONE =
 			"SELECT DIANO,MEMNO,DIANAME, DIATEXT, DIAIMG, DIACRETIME, DIAMODTIME, DIASTATE FROM DIARY WHERE DIANO = ? ";
@@ -50,25 +52,30 @@ public class DiaryDAO implements DiaryDAO_Interface{
 			
 		Connection con = null;
 		PreparedStatement pstmt =null;
+//		Base64.Encoder bs64 = Base64.getEncoder();
 		
 		try{
 			con = ds.getConnection();
 			pstmt = con.prepareStatement(INSERT);			
 		
-			pstmt.setInt(1, diary.getMemno());
-			pstmt.setString(2, diary.getDianame());
+//			String test = bs64.encodeToString(diary.getDiaImg());
+			
+			pstmt.setInt(1, diary.getMemNo());
+			pstmt.setString(2, diary.getDiaName());
+			
 			Clob clob =con.createClob();
-			clob.setString(1, diary.getDiatext());
+			clob.setString(1, diary.getDiaText());
+			
 			pstmt.setClob(3, clob);
 			
-			if(diary.getDiaimg()!=null)
-				pstmt.setBytes(4, diary.getDiaimg());
+			if(diary.getDiaImg()!=null)
+				pstmt.setBytes(4, diary.getDiaImg());
 			else
 				pstmt.setBytes(4, null);
 			
-			pstmt.setTimestamp(5, diary.getDiacretime());
-			pstmt.setTimestamp(6, diary.getDiacretime());
-			pstmt.setInt(7, diary.getDiastate());
+			pstmt.setTimestamp(5, diary.getDiaCreTime());
+			pstmt.setTimestamp(6, diary.getDiaCreTime());
+			pstmt.setInt(7, diary.getDiaState());
 			
 			pstmt.executeUpdate();
 			
@@ -105,11 +112,11 @@ public class DiaryDAO implements DiaryDAO_Interface{
 			con = ds.getConnection();
 			pstmt =con.prepareStatement(UPDATE);
 			
-			pstmt.setString(1, diary.getDianame());
-			pstmt.setString(2, diary.getDiatext());
-			pstmt.setBytes(3, diary.getDiaimg());
-			pstmt.setTimestamp(4, diary.getDiamodtime());
-			pstmt.setInt(5, diary.getDiano());
+			pstmt.setString(1, diary.getDiaName());
+			pstmt.setString(2, diary.getDiaText());
+			pstmt.setBytes(3, diary.getDiaImg());
+			pstmt.setTimestamp(4, diary.getDiaModTime());
+			pstmt.setInt(5, diary.getDiaNo());
 			
 			pstmt.executeUpdate();
 			
@@ -135,7 +142,7 @@ public class DiaryDAO implements DiaryDAO_Interface{
 	}
 
 	@Override
-	public void delete(Integer diano) {
+	public void delete(Integer diaNo) {
 
 		Connection con = null;
 		PreparedStatement pstmt= null;
@@ -145,7 +152,7 @@ public class DiaryDAO implements DiaryDAO_Interface{
 			con = ds.getConnection();
 			pstmt = con.prepareStatement(DELETE);
 			
-			pstmt.setInt(1, diano);
+			pstmt.setInt(1, diaNo);
 			
 			pstmt.executeUpdate();
 		}catch (SQLException se) {
@@ -171,7 +178,7 @@ public class DiaryDAO implements DiaryDAO_Interface{
 	}
 
 	@Override
-	public Diary findByPrimaryKey(Integer diano) {
+	public Diary findByPrimaryKey(Integer diaNo) {
 
 		Diary diary = null;
 		Connection con = null;
@@ -181,20 +188,20 @@ public class DiaryDAO implements DiaryDAO_Interface{
 		try{
 			con =ds.getConnection();
 			pstmt =con.prepareStatement(GETONE);
-			pstmt.setInt(1, diano);
+			pstmt.setInt(1, diaNo);
 			rs = pstmt.executeQuery();
 			
 			while(rs.next()){
 				
 				diary = new Diary();
-				diary.setDiano(rs.getInt("diano"));
-				diary.setMemno(rs.getInt("memno"));
-				diary.setDianame(rs.getString("dianame"));
-				diary.setDiatext(rs.getString("diatext"));
-				diary.setDiaimg(rs.getBytes("diaimg"));
-				diary.setDiacretime(rs.getTimestamp("diacretime"));
-				diary.setDiamodtime(rs.getTimestamp("diamodtime"));
-				diary.setDiastate(rs.getInt("diastate"));
+				diary.setDiaNo(rs.getInt("diano"));
+				diary.setMemNo(rs.getInt("memno"));
+				diary.setDiaName(rs.getString("dianame"));
+				diary.setDiaText(rs.getString("diatext"));
+				diary.setDiaImg(rs.getBytes("diaimg"));
+				diary.setDiaCreTime(rs.getTimestamp("diacretime"));
+				diary.setDiaModTime(rs.getTimestamp("diamodtime"));
+				diary.setDiaState(rs.getInt("diastate"));
 				
 				} 
 			}catch(SQLException e){
@@ -244,14 +251,14 @@ public class DiaryDAO implements DiaryDAO_Interface{
 			
 			while(rs.next()){
 				diaryVO= new Diary();
-				diaryVO.setDiano(rs.getInt("diano"));
-				diaryVO.setMemno(rs.getInt("memno"));
-				diaryVO.setDianame(rs.getString("dianame"));
-				diaryVO.setDiatext(rs.getString("diatext"));
-				diaryVO.setDiaimg(rs.getBytes("diaimg"));
-				diaryVO.setDiacretime(rs.getTimestamp("diacretime"));
-				diaryVO.setDiamodtime(rs.getTimestamp("diamodtime"));
-				diaryVO.setDiastate(rs.getInt("diastate"));
+				diaryVO.setDiaNo(rs.getInt("diano"));
+				diaryVO.setMemNo(rs.getInt("memno"));
+				diaryVO.setDiaName(rs.getString("dianame"));
+				diaryVO.setDiaText(rs.getString("diatext"));
+				diaryVO.setDiaImg(rs.getBytes("diaimg"));
+				diaryVO.setDiaCreTime(rs.getTimestamp("diacretime"));
+				diaryVO.setDiaModTime(rs.getTimestamp("diamodtime"));
+				diaryVO.setDiaState(rs.getInt("diastate"));
 				list.add(diaryVO);
 			}
 		}catch(SQLException se){

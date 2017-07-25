@@ -9,4 +9,25 @@
     <welcome-file>default.htm</welcome-file>
     <welcome-file>default.jsp</welcome-file>
   </welcome-file-list>
+
+	<servlet>
+		<servlet-name>DiaryServlet</servlet-name>
+		<servlet-class>com.diary.controller.DiaryServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>DiaryServlet</servlet-name>
+		<url-pattern>/diary/diary.do</url-pattern>
+	</servlet-mapping>
+  
+  	<servlet>
+    	<servlet-name>ShowImage</servlet-name>
+    	<servlet-class>com.diary.controller.ShowImage</servlet-class>
+  	</servlet>
+  	<servlet-mapping>
+    	<servlet-name>ShowImage</servlet-name>
+    	<url-pattern>/ShowImage</url-pattern>
+  	</servlet-mapping>
+
 </web-app>
+
+

@@ -126,7 +126,7 @@ public class InsertDummyBlob2 {
     	Diary diary=dao.findByPrimaryKey(dia++);
         try {
 			byte[] b = getPictureByteArray(file);
-			diary.setDiaimg(b);
+			diary.setDiaImg(b);
 			dao.update(diary);
 		} catch (IOException e) {
 			e.printStackTrace();
