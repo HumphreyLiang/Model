@@ -28,7 +28,7 @@ public class DiaryService {
 	}
 	
 	public Diary updateDia(Integer memNo, String diaName,String diaText, byte[] diaImg, 
-					Timestamp diaCreTime, Timestamp diaModTime, Integer diaState){
+					 Timestamp diaModTime, Integer diaState, Integer diaNo){
 		
 		Diary diary = new Diary();
 		
@@ -36,9 +36,9 @@ public class DiaryService {
 		diary.setDiaName(diaName);
 		diary.setDiaText(diaText);
 		diary.setDiaImg(diaImg);
-		diary.setDiaCreTime(diaCreTime);
 		diary.setDiaModTime(diaModTime);
 		diary.setDiaState(diaState);
+		diary.setDiaNo(diaNo);
 		
 		dao.update(diary);
 		
@@ -59,5 +59,8 @@ public class DiaryService {
 		return dao.getAll();
 	}
 	
+	public List<Diary> getAllFromMemNo(Integer memNo){
+		return dao.getOneMemNo(memNo);
+	}
 
 }

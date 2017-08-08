@@ -9,6 +9,6 @@ public interface LetterType_Interface {
 	public void delete(Integer letterTypeNo);
 	public LetterType findByPrimaryKey(Integer letterTypeNo);
 	public List<LetterType> getAll();
-	
+	public Integer getLetterTypeNo();
 	
 }

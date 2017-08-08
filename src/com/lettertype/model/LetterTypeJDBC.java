@@ -313,6 +313,12 @@ public class LetterTypeJDBC implements LetterType_Interface{
 		
 		
 	}
+
+	@Override
+	public Integer getLetterTypeNo() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 	
 	
 	

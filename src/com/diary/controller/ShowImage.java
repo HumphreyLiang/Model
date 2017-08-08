@@ -35,17 +35,23 @@ public class ShowImage extends HttpServlet{
 		
 //		req.setCharacterEncoding("BIG5");
 		res.setContentType("image/*");
-		ServletOutputStream out = res.getOutputStream();
-		
-		DiaryService dsv =new DiaryService();
-		if(!dsv.getOneDia(Integer.valueOf(req.getParameter("diano"))).getDiaImg().equals(null)){
-			ByteArrayInputStream in =new ByteArrayInputStream(dsv.getOneDia(Integer.valueOf(req.getParameter("diano"))).getDiaImg());
-			byte[] buf = new byte[8 * 1024];
-			int len;
-			while((len = in.read(buf))!=-1){
-					out.write(buf, 0, len);
-					}
+		try{
+			ServletOutputStream out = res.getOutputStream();
+			
+			DiaryService dsv =new DiaryService();
+			if(!dsv.getOneDia(Integer.valueOf(req.getParameter("diano"))).getDiaImg().equals("")){
+				ByteArrayInputStream in =new ByteArrayInputStream(dsv.getOneDia(Integer.valueOf(req.getParameter("diano"))).getDiaImg());
+				byte[] buf = new byte[8 * 1024];
+				int len;
+				while((len = in.read(buf))!=-1){
+						out.write(buf, 0, len);
+						}
+			}
+		}catch(NullPointerException ne){
+			
+			return;
 		}
+		
 		
 	}
 }

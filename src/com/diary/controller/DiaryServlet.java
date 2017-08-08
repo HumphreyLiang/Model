@@ -2,20 +2,23 @@ package com.diary.controller;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.sql.Timestamp;
 import java.util.GregorianCalendar;
 import java.util.LinkedList;
 import java.util.List;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import javax.servlet.http.Part;
 
+import com.diary.model.Diary;
 import com.diary.model.DiaryService;
+import com.member.model.Member;
 
 @MultipartConfig(fileSizeThreshold =500* 1024 * 1024, maxFileSize = 500 * 1024 * 1024, maxRequestSize = 5 * 500 * 1024 * 1024)
 public class DiaryServlet extends HttpServlet{
@@ -27,84 +30,214 @@ public class DiaryServlet extends HttpServlet{
 	public void doPost(HttpServletRequest req, HttpServletResponse res )
 			throws ServletException, IOException{
 		
-		req.setCharacterEncoding("big5");
-		res.setContentType("text/html; charset=UTF-8");
-		//String action = req.getParameter("action");
-		PrintWriter out = res.getWriter();
-//		if("insert".equals(action)){
+		HttpSession session = req.getSession();
+		Member member = (Member)session.getAttribute("member");
+		
+		req.setCharacterEncoding("utf-8");
+		res.setContentType("text/html; charset=Big5");
+		String action = req.getParameter("action");
+		
+		if("insert".equals(action)){
 			
 			List<String> errorMsgs = new LinkedList<String>();
 			req.setAttribute("errorMsgs", errorMsgs);
 			
-			
-			//----------------判斷會員編號-------------------
-			Integer memNo =null;
-			try{
-				 
-				 memNo = new Integer(Integer.valueOf(req.getParameter("memno")));
-				 
-			}catch(NullPointerException e){
-				errorMsgs.add("請填會員編號!");
-			}
+
 			//----------------判斷名稱是否為空值-------------------
 			String diaName = null;
 			try{
 				diaName = req.getParameter("dianame").trim();
-				
+				if(diaName.isEmpty()){
+					errorMsgs.add("請輸入發文名稱!");
+				}
 			}catch(NullPointerException e){
-				errorMsgs.add("請輸入發文名稱!");
+				e.printStackTrace(System.err);	
 			}
 			//----------------判斷內文是否為空值-------------------
 			String diaText = null;
 			try{
 				diaText = req.getParameter("diatext").trim();
-			}catch(NullPointerException ne){
-				errorMsgs.add("請輸入內文!");
+				if(diaText.equals("")){			//夸號裡面不是null的字而是""
+					errorMsgs.add("請輸入內文!");
+				}
+			}catch(Exception ne){
+				ne.printStackTrace(System.err);
 			}
 			//---------------判斷圖片的格式----------------------
-			byte[] diaImg= null;
-			String fileName=null;
+			byte[] diaImg= null;			
 			Part part = req.getPart("diaimg");
-
-			if(part.getSize()!=0){
-//				fileName = getFileNameFromPart(part);
-				System.out.println(part.equals(null));
+			if(!part.equals("")){
 				if(part.getContentType().substring(0,5).equals("image")){
 					diaImg = getByteArrayImg(part);
-					System.out.println(part.getContentType());
-					System.out.println("圖片格式正確!");
 				}
 			}
-				GregorianCalendar speday = new GregorianCalendar(2011,12,3,23,49,22);
-//				Timestamp diacretime =new Timestamp(System.currentTimeMillis());
-				Timestamp diaCreTime =new Timestamp(speday.getTimeInMillis());
+//				GregorianCalendar speday = new GregorianCalendar(2011,12,3,23,49,22);
+//				Timestamp diaCreTime =new Timestamp(speday.getTimeInMillis());
+				
+				Timestamp diaCreTime =new Timestamp(System.currentTimeMillis());
+				
 				Timestamp diaModTime =null;
 				Integer diaState = 0; //indicate appearance
 				
-//				EmpVO empVO = new EmpVO();
-//				empVO.setEname(ename);
-//				empVO.setJob(job);
-//				empVO.setHiredate(hiredate);
-//				empVO.setSal(sal);
-//				empVO.setComm(comm);
-//				empVO.setDeptno(deptno);
-//
-//				// Send the use back to the form, if there were errors
-//				if (!errorMsgs.isEmpty()) {
-//					req.setAttribute("empVO", empVO); // 含有輸入格式錯誤的empVO物件,也存入req
-//					RequestDispatcher failureView = req
-//							.getRequestDispatcher("/emp/addEmp.jsp");
-//					failureView.forward(req, res);
-//					return;
-//				}
+//				Diary diary = new Diary();
+//				diary.setMemNo(member.getMemNo());
+//				diary.setDiaName(diaName);
+//				diary.setDiaCreTime(diaCreTime);
+//				diary.setDiaModTime(diaModTime);
+//				diary.setDiaText(diaText);
+//				diary.setDiaImg(diaImg);
+//				diary.setDiaState(diaState);
+
+				// Send the use back to the form, if there were errors
+				if (!errorMsgs.isEmpty()) {
+	
+					RequestDispatcher failureView = req.getRequestDispatcher("/front_end/diary/mydiary.jsp");
+					failureView.forward(req, res);
+					
+					return;
+				}
 				
 				DiaryService dsv =new DiaryService();
-				dsv.addDia(memNo, diaName, diaText, diaImg, diaCreTime, diaModTime, diaState);
+				dsv.addDia(member.getMemNo(), diaName, diaText, diaImg, diaCreTime, diaModTime, diaState);
 				
+				res.sendRedirect(req.getContextPath() + "/front_end/diary/mydiary.jsp");
 				
 		}
 		
-//	}
+		if ("update".equals(action)) { // 來自jsp的請求
+			
+			List<String> errorMsgs = new LinkedList<String>();
+			req.setAttribute("errorMsgs", errorMsgs);
+		
+			try {
+				Integer diaNo = Integer.valueOf(req.getParameter("diano"));
+				//----------------判斷名稱是否為空值-------------------
+				String diaName = null;
+				try{
+					diaName = req.getParameter("dianame").trim();
+					if(diaName.isEmpty()){
+						errorMsgs.add("請輸入發文名稱!");
+					}
+				}catch(NullPointerException e){
+					e.printStackTrace(System.err);	
+				}
+				//----------------判斷內文是否為空值-------------------
+				String diaText = null;
+				try{
+					diaText = req.getParameter("diatext").trim();
+					if(diaText.equals("")){			//夸號裡面不是null的字而是""
+						errorMsgs.add("請輸入內文!");
+					}
+				}catch(Exception ne){
+					ne.printStackTrace(System.err);
+				}
+				//---------------判斷圖片----------------------
+				byte[] diaImg= null;			
+				try{
+					Part part = req.getPart("diaimg");
+
+						if(part.getContentType().substring(0,5).equals("image") ){
+							diaImg = getByteArrayImg(part);
+						}else if(part.getSize()!=0){
+							//格式錯誤
+							errorMsgs.add("此非圖片格式!");
+						}else {
+							//判斷如果沒上傳新的就沿用舊的
+							DiaryService diaSvc = new DiaryService();
+							Diary diaryOld = diaSvc.getOneDia(diaNo);
+							diaImg = diaryOld.getDiaImg();
+						}
+			
+				}catch(Exception e){
+					e.printStackTrace(System.err);					
+				}
+					
+					Timestamp diaModTime = new Timestamp(System.currentTimeMillis());;
+					Integer diaState = 0; //indicate appearance
+
+				if (!errorMsgs.isEmpty()) {
+					RequestDispatcher failureView = req.getRequestDispatcher("/front_end/diary/updateDiary.jsp");
+					failureView.forward(req, res);
+					return; //程式中斷
+				}
+				
+				/***************************2.開始修改資料*****************************************/
+				DiaryService diaSvc = new DiaryService();
+				Diary diary = diaSvc.updateDia(member.getMemNo(), diaName, diaText, diaImg, diaModTime, diaState, diaNo);
+				
+				/***************************3.修改完成,準備轉交(Send the Success view)*************/
+				req.setAttribute("diary", diary); // 資料庫update成功後,正確的的diary物件,存入req
+				String url = "/front_end/diary/mydiary.jsp";
+				RequestDispatcher successView = req.getRequestDispatcher(url); // 修改成功後,轉交listOneEmp.jsp
+				successView.forward(req, res);
+
+				/***************************其他可能的錯誤處理*************************************/
+			} catch (Exception e) {
+				errorMsgs.add("修改資料失敗: "+e.getMessage());
+				RequestDispatcher failureView = req.getRequestDispatcher("/front_end/diary/updateDiary.jsp");
+				failureView.forward(req, res);
+			}
+		}
+		
+		if ("getOne_For_Update".equals(action)) { // 來自mydiary.jsp的請求
+
+			List<String> errorMsgs = new LinkedList<String>();
+			req.setAttribute("errorMsgs", errorMsgs);
+			
+			try {
+				/***************************1.接收請求參數****************************************/
+				Integer diano = Integer.valueOf(req.getParameter("diano"));
+				
+				/***************************2.開始查詢資料****************************************/
+				DiaryService diaSvc = new DiaryService();
+				Diary diary = diaSvc.getOneDia(diano); 
+								
+				/***************************3.查詢完成,準備轉交(Send the Success view)************/
+				req.setAttribute("diary", diary);         // 資料庫取出的diary物件,存入req
+				String url = "/front_end/diary/updateDiary.jsp";
+				RequestDispatcher successView = req.getRequestDispatcher(url);// 成功轉交 
+				successView.forward(req, res);
+
+				/***************************其他可能的錯誤處理**********************************/
+			} catch (Exception e) {
+				errorMsgs.add("無法取得要修改的資料:" + e.getMessage());
+				RequestDispatcher failureView = req.getRequestDispatcher("/front_end/diary/mydiary.jsp");
+				failureView.forward(req, res);
+			}
+		}
+		
+		if ("delete".equals(action)) { // 來自listAllEmp.jsp
+
+			List<String> errorMsgs = new LinkedList<String>();
+			req.setAttribute("errorMsgs", errorMsgs);
+	
+			try {
+				/***************************1.接收請求參數***************************************/
+				Integer diaNo = new Integer(req.getParameter("diano"));
+				
+				/***************************2.開始刪除資料***************************************/
+				DiaryService diaSvc = new DiaryService();
+				diaSvc.deleteDia(diaNo);
+				
+				/***************************3.刪除完成,準備轉交(Send the Success view)***********/								
+				String url = "/front_end/diary/mydiary.jsp";
+				RequestDispatcher successView = req.getRequestDispatcher(url);// 刪除成功後,轉交回送出刪除的來源網頁
+				successView.forward(req, res);
+				
+				/***************************其他可能的錯誤處理**********************************/
+			} catch (Exception e) {
+				errorMsgs.add("刪除資料失敗:"+e.getMessage());
+				RequestDispatcher failureView = req.getRequestDispatcher("/front_end/diary/mydiary.jsp");
+				failureView.forward(req, res);
+			}
+		}
+		
+		
+		
+		
+		
+		
+	}
 	
 	public byte[] getByteArrayImg(Part part){
 		
@@ -128,13 +261,5 @@ public class DiaryServlet extends HttpServlet{
 		return diaimg.toByteArray();
 	}
 	
-//	public String getFileNameFromPart(Part part) {
-//		String header = part.getHeader("content-disposition");
-//		String filename = header.substring(header.lastIndexOf("=") + 2, header.length() - 1);
-//		if (filename.length() == 0) {
-//			return null;
-//		}
-//		return filename;
-//	}
 
 }

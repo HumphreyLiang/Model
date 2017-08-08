@@ -11,12 +11,40 @@
   </welcome-file-list>
 
 	<servlet>
+		<servlet-name>LetterTypeServlet</servlet-name>
+		<servlet-class>com.lettertype.controller.LetterTypeServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>LetterTypeServlet</servlet-name>
+		<url-pattern>/back_end/letter/letterType.do</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>DiaMsgServlet</servlet-name>
+		<servlet-class>com.diamsg.controller.DiaMsgServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>DiaMsgServlet</servlet-name>
+		<url-pattern>/front_end/diary/diaMsg.do</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>SubMemServlet</servlet-name>
+		<servlet-class>com.submem.controller.SubMemServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>SubMemServlet</servlet-name>
+		<url-pattern>/front_end/diary/subMem.do</url-pattern>
+	</servlet-mapping>
+
+
+	<servlet>
 		<servlet-name>DiaryServlet</servlet-name>
 		<servlet-class>com.diary.controller.DiaryServlet</servlet-class>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>DiaryServlet</servlet-name>
-		<url-pattern>/diary/diary.do</url-pattern>
+		<url-pattern>/front_end/diary/diary.do</url-pattern>
 	</servlet-mapping>
   
   	<servlet>
@@ -25,8 +53,32 @@
   	</servlet>
   	<servlet-mapping>
     	<servlet-name>ShowImage</servlet-name>
-    	<url-pattern>/ShowImage</url-pattern>
+    	<url-pattern>/front_end/diary/ShowImage</url-pattern>
   	</servlet-mapping>
+	
+	<filter>
+    	<filter-name>loginFilter</filter-name>
+    	<filter-class>com.filters.LoginFilter</filter-class>
+	</filter>
+	<filter-mapping>
+	    <filter-name>loginFilter</filter-name>
+	    <url-pattern>/front_end/member/memberInfo.jsp</url-pattern>
+	    <url-pattern>/front_end/diary/mydiary.jsp</url-pattern>
+	    <url-pattern>/front_end/diary/manageSubMem.jsp</url-pattern>
+	    <url-pattern>/front_end/diary/diaMsg.do</url-pattern>
+	    <dispatcher>REQUEST</dispatcher>
+	    <dispatcher>FORWARD</dispatcher>
+	    <dispatcher>INCLUDE</dispatcher>
+	    <dispatcher>ERROR</dispatcher>
+	    <dispatcher>ASYNC</dispatcher>
+	  </filter-mapping>
+	  
+	  <servlet>
+	    <servlet-name>PutMap</servlet-name>
+	    <servlet-class>com.context.PutMap</servlet-class>
+	    <load-on-startup>10</load-on-startup>
+	  </servlet>
+
 
 </web-app>
 

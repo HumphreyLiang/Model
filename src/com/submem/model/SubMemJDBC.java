@@ -289,17 +289,7 @@ public class SubMemJDBC implements SubMem_Interface{
 //		dao.delete(submem2);
 		
 		//query 1
-//		List<SubMem> list = dao.findByPrimaryKey(5001);
-//		for(SubMem submem:list){
-//			System.out.print(submem.getActSubMemNo()+", ");
-//			System.out.print(submem.getBeSubMemNo()+", ");
-//			System.out.print(submem.getSubState());
-//			System.out.println();
-//			System.out.println("-----------------------");
-//		}
-		
-		//query all
-		List<SubMem> list = dao.getAll();
+		List<SubMem> list = dao.findByPrimaryKey(5006);
 		for(SubMem submem:list){
 			System.out.print(submem.getActSubMemNo()+", ");
 			System.out.print(submem.getBeSubMemNo()+", ");
@@ -307,6 +297,16 @@ public class SubMemJDBC implements SubMem_Interface{
 			System.out.println();
 			System.out.println("-----------------------");
 		}
+		
+		//query all
+//		List<SubMem> list = dao.getAll();
+//		for(SubMem submem:list){
+//			System.out.print(submem.getActSubMemNo()+", ");
+//			System.out.print(submem.getBeSubMemNo()+", ");
+//			System.out.print(submem.getSubState());
+//			System.out.println();
+//			System.out.println("-----------------------");
+//		}
 		
 	}
 

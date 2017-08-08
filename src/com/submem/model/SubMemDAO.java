@@ -33,7 +33,7 @@ public class SubMemDAO implements SubMem_Interface{
 	private static final String GETALL = 
 			"SELECT ACTSUBMEMNO, BESUBMEMNO, SUBSTATE FROM SUBMEM ORDER BY ACTSUBMEMNO";
 	private static final String GETONE =
-			"SELECT ACTSUBMEMNO, BESUBMEMNO, SUBSTATE FROM SUBMEM WHERE ACTSUBMEMNO = ?";
+			"SELECT ACTSUBMEMNO, BESUBMEMNO, SUBSTATE FROM SUBMEM WHERE ACTSUBMEMNO = ? and SUBSTATE = 0";
 	private static final String UPDATE =
 			"UPDATE SUBMEM SET SUBSTATE=? WHERE ACTSUBMEMNO = ? AND BESUBMEMNO = ?";
 	private static final String DELETE=
@@ -47,13 +47,18 @@ public class SubMemDAO implements SubMem_Interface{
 		
 		try{
 			con =ds.getConnection();
-			pstmt = con.prepareStatement(INSERT);
+			pstmt = con.prepareStatement(INSERT);	
 			pstmt.setInt(1, subMem.getActSubMemNo());
 			pstmt.setInt(2, subMem.getBeSubMemNo());
 			pstmt.setInt(3, subMem.getSubState());
 			pstmt.executeUpdate();
-		}catch(SQLException se){
-			se.printStackTrace();
+		}catch(SQLException se){	
+			//防止取消追蹤後再重新加入會發生ORA-00001: unique constraint (PETYM.SUBMEM_PK) violated
+				SubMem submem = new SubMem();
+				submem.setActSubMemNo(subMem.getActSubMemNo());
+				submem.setBeSubMemNo(subMem.getBeSubMemNo());
+				submem.setSubState(0);
+				update(submem);	
 		}finally{
 			if(pstmt!=null){
 				try{

@@ -1,0 +1,25 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="BIG5"%>
+<div class="postion-left-group-b">
+                    <footer>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="col-sm-3">
+                                    <p>Copyright 寵物You&amp;Me 2017</p>
+                                </div>
+                                <div class="col-sm-3">
+                                    <p>關於我們</p>
+                                </div>
+                            </div>
+                        </div>
+                    </footer>
+                </div>
+                <a href="#">
+                    <div class="" id="fixedbutton-talk">
+                        <button class="button btn-lg btn-primary active">
+                            交易聊天室
+                        </button>
+                    </div>
+                </a>
+            </div>
+       </div>
+     </div>   

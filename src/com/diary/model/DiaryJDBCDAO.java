@@ -363,4 +363,10 @@ public class DiaryJDBCDAO implements DiaryDAO_Interface{
 		
 	}
 
+	@Override
+	public List<Diary> getOneMemNo(Integer memNo) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

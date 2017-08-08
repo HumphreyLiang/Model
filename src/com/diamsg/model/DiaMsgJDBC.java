@@ -41,7 +41,7 @@ public class DiaMsgJDBC implements DiaMsgDAO_Interface{
 			con = DriverManager.getConnection(url,userid,passwd);
 			pstmt = con.prepareStatement(INSERT);			
 			
-			pstmt.setInt(1, diaMsg.getDiaNO());
+			pstmt.setInt(1, diaMsg.getDiaNo());
 			pstmt.setInt(2, diaMsg.getMemNo());
 			pstmt.setString(3, diaMsg.getDiaMsgText());
 			pstmt.setTimestamp(4, diaMsg.getDiaMsgTime());
@@ -88,7 +88,7 @@ public class DiaMsgJDBC implements DiaMsgDAO_Interface{
 			
 			pstmt.setString(1, diaMsg.getDiaMsgText());
 			pstmt.setTimestamp(2, diaMsg.getDiaMsgTime());
-			pstmt.setInt(3, diaMsg.getDiaMsgNO());
+			pstmt.setInt(3, diaMsg.getDiaMsgNo());
 			
 			pstmt.executeUpdate();
 			
@@ -178,9 +178,9 @@ public class DiaMsgJDBC implements DiaMsgDAO_Interface{
 			while (rs.next()) {
 				
 				diaMsg = new DiaMsg();
-				diaMsg.setDiaMsgNO(rs.getInt("diamsgno"));
+				diaMsg.setDiaMsgNo(rs.getInt("diamsgno"));
 				System.out.println(rs.getInt("diamsgno"));
-				diaMsg.setDiaNO(rs.getInt("diano"));
+				diaMsg.setDiaNo(rs.getInt("diano"));
 				diaMsg.setMemNo(rs.getInt("memno"));
 				diaMsg.setDiaMsgText(rs.getString("diamsgtext"));
 				diaMsg.setDiaMsgTime(rs.getTimestamp("diamsgdate"));
@@ -245,8 +245,8 @@ public class DiaMsgJDBC implements DiaMsgDAO_Interface{
 			while (rs.next()) {
 				
 				diaMsg = new DiaMsg();
-				diaMsg.setDiaMsgNO(rs.getInt("diamsgno"));
-				diaMsg.setDiaNO(rs.getInt("diano"));
+				diaMsg.setDiaMsgNo(rs.getInt("diamsgno"));
+				diaMsg.setDiaNo(rs.getInt("diano"));
 				diaMsg.setMemNo(rs.getInt("memno"));
 				diaMsg.setDiaMsgText(rs.getString("diamsgtext"));
 				diaMsg.setDiaMsgTime(rs.getTimestamp("diamsgdate"));
@@ -296,7 +296,7 @@ public class DiaMsgJDBC implements DiaMsgDAO_Interface{
 		
 		//insert
 //		DiaMsg diamsg = new DiaMsg();
-//		diamsg.setDiaNO(102);
+//		diamsg.setDiaNo(102);
 //		diamsg.setMemNo(222);
 //		diamsg.setDiaMsgText("«¢«¢¦n¦n¬Ý");
 //		diamsg.setDiaMsgTime(new java.sql.Timestamp(System.currentTimeMillis()));
@@ -310,7 +310,7 @@ public class DiaMsgJDBC implements DiaMsgDAO_Interface{
 //		
 //		diamsg1.setDiaMsgText("«¢«¢«¢«¢«¢«¢");
 //		diamsg1.setDiaMsgTime(new java.sql.Timestamp(System.currentTimeMillis()));
-//		diamsg1.setDiaMsgNO(20018);
+//		diamsg1.setDiaMsgNo(20018);
 //		
 //		dao.update(diamsg1);
 //		
@@ -320,8 +320,8 @@ public class DiaMsgJDBC implements DiaMsgDAO_Interface{
 		
 		//query one
 //		DiaMsg diamsg = dao.findByPrimaryKey(20003);
-//		System.out.print(diamsg.getDiaMsgNO()+" ,");
-//		System.out.print(diamsg.getDiaNO()+" ,");
+//		System.out.print(diamsg.getDiaMsgNo()+" ,");
+//		System.out.print(diamsg.getDiaNo()+" ,");
 //		System.out.print(diamsg.getMemNo()+" ,");
 //		System.out.print(diamsg.getDiaMsgText()+" ,");
 //		System.out.print(diamsg.getDiaMsgTime()+" ,");
@@ -332,8 +332,8 @@ public class DiaMsgJDBC implements DiaMsgDAO_Interface{
 		//query all
 		List<DiaMsg> list = dao.getAll();
 		for(DiaMsg diamsg:list){
-			System.out.print(diamsg.getDiaMsgNO()+" ,");
-			System.out.print(diamsg.getDiaNO()+" ,");
+			System.out.print(diamsg.getDiaMsgNo()+" ,");
+			System.out.print(diamsg.getDiaNo()+" ,");
 			System.out.print(diamsg.getMemNo()+" ,");
 			System.out.print(diamsg.getDiaMsgText()+" ,");
 			System.out.print(diamsg.getDiaMsgTime()+" ,");
@@ -342,6 +342,12 @@ public class DiaMsgJDBC implements DiaMsgDAO_Interface{
 		}
 		
 		
+	}
+
+	@Override
+	public List<DiaMsg> getAllMsgFromDia(Integer diaNo) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 	

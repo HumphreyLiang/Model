@@ -31,6 +31,8 @@ public class LetterTypeDAO implements LetterType_Interface{
 	
 	private static final String INSERT = 
 			"INSERT INTO LETTERTYPE(LETTERTYPENO, LETTERTYPENAME , LETTERTYPETEXT ) VALUES (LETTERTYPE_SEQ.NEXTVAL,?,?)";
+	private static final String GETCURRVAL =
+			"SELECT LETTERTYPE_SEQ.CURRVAL FROM DUAL";
 	private static final String GETALL = 
 			"SELECT LETTERTYPENO, LETTERTYPENAME , LETTERTYPETEXT FROM LETTERTYPE ORDER BY LETTERTYPENO";
 	private static final String GETONE =
@@ -258,6 +260,48 @@ public class LetterTypeDAO implements LetterType_Interface{
 		}
 		
 		return list;
+	}
+
+	@Override
+	public Integer getLetterTypeNo() {
+		
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		Integer curr = null;
+		try {
+
+			con = ds.getConnection();
+			pstmt = con.prepareStatement(GETCURRVAL);
+			rs = pstmt.executeQuery();
+			rs.next();
+			curr =new Integer(rs.getInt(1));
+		}catch(SQLException se){
+			se.printStackTrace();
+		}finally{
+			if(rs != null){
+				try{
+					rs.close();
+				}catch(SQLException se){
+					se.printStackTrace(System.err);
+				}
+			}
+			if(pstmt != null){
+				try{
+					pstmt.close();
+				}catch(SQLException se){
+					se.printStackTrace(System.err);
+				}
+			}
+			if(con != null){
+				try{
+					con.close();
+				}catch(Exception e){
+					e.printStackTrace(System.err);
+				}
+			}
+		}
+		return curr;
 	}
 
 }

@@ -1,0 +1,17 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="BIG5"%>
+
+
+
+<div class="container-fluid matchnav">
+        <div class="row ">
+            <div class="col-xs-12 col-sm-2 postion-left-group ">
+                <div id="menu">
+                    <div class="panel list-group list-color">
+                        <a href="" class="list-group-item">收信匣</a>
+                        <a href="" class="list-group-item">選取標註</a>                        	                  
+                        <a href="" class="list-group-item">未讀取信</a>
+                    </div>
+                </div>
+            </div>
+
+
