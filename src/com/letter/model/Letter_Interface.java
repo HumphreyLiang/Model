@@ -10,6 +10,6 @@ public interface Letter_Interface {
 	public void delete(Integer letterNo);
 	public Letter findByPrimaryKey(Integer letterNo);
 	public List<Letter> getAll();
-	
+	public List<Letter> getOneMemLtrs(Integer memNo);
 	
 }

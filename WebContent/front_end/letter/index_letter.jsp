@@ -1,22 +1,23 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="BIG5"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-<%@ page import="com.diary.model.*"%>
 <%@ page import="com.member.model.*"%>
+<%@ page import="com.letter.model.*"%>
 <%@ page import="java.io.*"%>
 <%@ page import="java.util.*"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 
 <%
-	
-	
-    
+	Member member = (Member)session.getAttribute("member");
+	LetterService ltrSvc = new LetterService();
+	List<Letter> list = ltrSvc.getOneMem(member.getMemNo());
+	pageContext.setAttribute("listFromMem", list);
 %>
 
 <jsp:useBean id="memSvc" scope="page" class="com.member.model.MemberService"/>
 
 
-<html>
+<html lang="">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=BIG5">
 <title>Insert title here</title>
@@ -32,12 +33,15 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
 <!-- 	<script src="http://code.jquery.com/jquery-1.10.1.min.js"></script> -->
 </head>
-<body>
-	<%@ include file="navbar.file" %>
+<body >
+	
+	
+ 	<%@ include file="navbar.file" %> 
     
-    <div class="container-fluid matchnav">
-        <div class="row ">
-            <div class="col-xs-12 col-sm-2 postion-left-group ">
+        
+    <div class="container-fluid" >
+    	<div class="row">    
+            <div class="col-xs-12 col-sm-2 postion-left-group">
                 <div id="menu">
                     <div class="panel list-group list-color">
                         <a href="" class="list-group-item">收信匣</a>
@@ -46,33 +50,43 @@
                     </div>
                 </div>
             </div>
-        </div>
-	</div>
-                <div class="row">
-                    <div class="panel panel-default col-sm-8 col-sm-offset-2 top-margin-sm">
-                        <h5 class="page-header text-right">目前位置:站內信</h5>
-                        <div class="">
-                            <div class="panel-heading">
-                                <h3 class="panel-title"></h3>
-                                <h3 class="panel-title text-right">最後</h3>
-                            </div>
+    
+    
+			<div class="col-xs-12 col-sm-8" style="margin-top:50px;" >
+                <h5 class="page-header text-right">目前位置:站內信首頁</h5>
+                 <div class="row" style="overflow-y:scroll;overflow-x:hidden;height:500px;" >                	
+                    <div class="panel panel-default text-center " >                   
+                        <div class="">                        
+                         
                             <div class="panel-body">
-                                <blockquote class="blockquote">
-                                    <p class="text-justify"></p>
-                                    <footer class="text-right">posted by
-                                        <cite>                                     			
-                                       					 
-                                        </cite>
-                                    </footer>
-                                </blockquote>
+                                <table border='0' bordercolor='#CCCCFF' width='850'>
+										<tr >
+											<th class="text-center">信件狀態</th>
+											<th class="text-center">信件標註</th>
+										
+											<th class="text-center">信件內文</th>
+											<th class="text-center">寄件時間</th>
+										</tr>
+									<c:forEach var="ltr" items="${listFromMem}">
+										<tr >
+											<td>${ltr.letterState}</td>	
+											<td>${ltr.letterTag}</td>	
+												
+											<td>${ltr.letterText}</td>	
+											<td><fmt:formatDate value="${ltr.letterTime}" pattern="yyyy-MM-dd HH:mm:ss"/></td>										
+										</tr>
+									</c:forEach>										
+								</table>
                             </div>
-                         </div>
-                      </div>
-                  </div>                 
+                         
+                                               
+                         </div>                                
+                    </div>                
+                </div>
 
-                
-                <%@ include file="bottom.file" %>
-                
+            </div>
+       </div>
+     </div>
                 
                 
                 

@@ -2,8 +2,6 @@
 
 
 
-<div class="container-fluid matchnav">
-        <div class="row ">
             <div class="col-xs-12 col-sm-2 postion-left-group ">
                 <div id="menu">
                     <div class="panel list-group list-color">

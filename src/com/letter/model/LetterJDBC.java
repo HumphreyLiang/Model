@@ -346,6 +346,12 @@ public class LetterJDBC implements Letter_Interface{
 		
 		
 	}
+
+	@Override
+	public List<Letter> getOneMemLtrs(Integer memNo) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 	
 	
 
