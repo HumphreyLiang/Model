@@ -41,7 +41,11 @@ public class LetterDAO implements Letter_Interface{
 	private static final String DELETE=
 			"DELETE FROM LETTER WHERE LETTERNO = ?";
 	private static final String GETONEMEM =
-			"SELECT LETTERNO, LETTERTYPENO, MEMNO, LETTERTIME , LETTERSTATE,LETTERTAG,LETTERTEXT FROM LETTER WHERE MEMNO = ?";
+			"SELECT LETTERNO, LETTERTYPENO, MEMNO, LETTERTIME , LETTERSTATE,LETTERTAG,LETTERTEXT FROM LETTER WHERE MEMNO = ? ORDER BY LETTERTIME";
+	private static final String GETTAG =
+			"SELECT LETTERNO, LETTERTYPENO, MEMNO, LETTERTIME , LETTERSTATE,LETTERTAG,LETTERTEXT FROM LETTER WHERE MEMNO = ? AND LETTERTAG = 1 ORDER BY LETTERTIME";
+	private static final String GETNOTREAD =
+			"SELECT LETTERNO, LETTERTYPENO, MEMNO, LETTERTIME , LETTERSTATE,LETTERTAG,LETTERTEXT FROM LETTER WHERE MEMNO = ? AND LETTERSTATE = 0 ORDER BY LETTERTIME"; //0ªí¥Ü¥¼Åª
 	
 	
 	
@@ -347,6 +351,120 @@ public class LetterDAO implements Letter_Interface{
 		return list;
 		
 		
+	}
+
+	@Override
+	public List<Letter> getTagLtrs(Integer memNo) {
+		List<Letter> list = new ArrayList<Letter>();
+		Letter letter = null;
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		
+		try{
+			
+			con = ds.getConnection();
+			pstmt = con.prepareStatement(GETTAG);
+			pstmt.setInt(1, memNo);
+			rs = pstmt.executeQuery();
+			
+			while(rs.next()){
+				letter = new Letter();
+				
+				letter.setLetterNo(rs.getInt("letterno"));
+				letter.setLetterTypeNo(rs.getInt("lettertypeno"));
+				letter.setMemNo(rs.getInt("memno"));
+				letter.setLetterTime(rs.getTimestamp("lettertime"));
+				letter.setLetterState(rs.getInt("letterstate"));
+				letter.setLetterTag(rs.getInt("lettertag"));
+				letter.setLetterText(rs.getString("lettertext"));
+				list.add(letter);
+			}
+		
+		}catch(SQLException se){
+			se.printStackTrace();
+		}finally{
+			if(rs != null){
+				try{
+					rs.close();
+				}catch(SQLException se){
+					se.printStackTrace(System.err);
+				}
+			}
+			if(pstmt != null){
+				try{
+					pstmt.close();
+				}catch(SQLException se){
+					se.printStackTrace(System.err);
+				}
+			}
+			if(con != null){
+				try{
+					con.close();
+				}catch(Exception e){
+					e.printStackTrace(System.err);
+				}
+			}
+		}
+		
+		return list;
+	}
+
+	@Override
+	public List<Letter> getNotReadLtrs(Integer memNo) {
+		List<Letter> list = new ArrayList<Letter>();
+		Letter letter = null;
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		
+		try{
+			
+			con = ds.getConnection();
+			pstmt = con.prepareStatement(GETNOTREAD);
+			pstmt.setInt(1, memNo);
+			rs = pstmt.executeQuery();
+			
+			while(rs.next()){
+				letter = new Letter();
+				
+				letter.setLetterNo(rs.getInt("letterno"));
+				letter.setLetterTypeNo(rs.getInt("lettertypeno"));
+				letter.setMemNo(rs.getInt("memno"));
+				letter.setLetterTime(rs.getTimestamp("lettertime"));
+				letter.setLetterState(rs.getInt("letterstate"));
+				letter.setLetterTag(rs.getInt("lettertag"));
+				letter.setLetterText(rs.getString("lettertext"));
+				list.add(letter);
+			}
+		
+		}catch(SQLException se){
+			se.printStackTrace();
+		}finally{
+			if(rs != null){
+				try{
+					rs.close();
+				}catch(SQLException se){
+					se.printStackTrace(System.err);
+				}
+			}
+			if(pstmt != null){
+				try{
+					pstmt.close();
+				}catch(SQLException se){
+					se.printStackTrace(System.err);
+				}
+			}
+			if(con != null){
+				try{
+					con.close();
+				}catch(Exception e){
+					e.printStackTrace(System.err);
+				}
+			}
+		}
+		
+		return list;
 	}
 
 }

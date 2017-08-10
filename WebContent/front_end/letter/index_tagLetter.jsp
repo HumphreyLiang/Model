@@ -10,8 +10,9 @@
 <%
 	Member member = (Member)session.getAttribute("member");
 	LetterService ltrSvc = new LetterService();
-	List<Letter> list = ltrSvc.getOneMem(member.getMemNo());
+	List<Letter> list = ltrSvc.getTagLtrs(member.getMemNo());
 	pageContext.setAttribute("listFromMem", list);
+	
 %>
 
 <jsp:useBean id="memSvc" scope="page" class="com.member.model.MemberService"/>

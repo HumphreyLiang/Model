@@ -17,5 +17,13 @@ public class LetterService {
 	public List<Letter> getOneMem(Integer memNo){
 		return dao.getOneMemLtrs(memNo);
 	}
+	
+	public List<Letter> getTagLtrs(Integer memNo){
+		return dao.getTagLtrs(memNo);
+	}
+	
+	public List<Letter> getNotReadLtrs(Integer memNo){
+		return dao.getNotReadLtrs(memNo);
+	}
 
 }

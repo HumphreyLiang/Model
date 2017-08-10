@@ -352,6 +352,18 @@ public class LetterJDBC implements Letter_Interface{
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	@Override
+	public List<Letter> getTagLtrs(Integer memNo) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<Letter> getNotReadLtrs(Integer memNo) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 	
 	
 
