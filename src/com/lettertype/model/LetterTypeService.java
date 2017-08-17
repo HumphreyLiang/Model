@@ -37,6 +37,8 @@ public class LetterTypeService {
 		
 		return lettertype;
 	}
-	
+	public LetterType getOneByPrimaryKey(Integer letterTypeNo){
+		return dao.findByPrimaryKey(letterTypeNo);
+	}
 	
 }

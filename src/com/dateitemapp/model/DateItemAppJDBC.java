@@ -18,14 +18,14 @@ public class DateItemAppJDBC implements DateItemApp_Interface{
 	String passwd = "123456";
 	
 	private static final String INSERT = 
-			"INSERT INTO DATEITEMAPP(APPNO, MEMNO, DATEITEMNO, APPTITLE, APPTEXT, APPIMG, APPDATE, APPSTATE)"+
-					"VALUES (DATEITEMAPP_SEQ.NEXTVAL,?,?,?,?,?,?,?)";
+			"INSERT INTO DATEITEMAPP(APPNO, MEMNO, DATEITEMNO, APPTITLE, APPTEXT, APPDATE, APPSTATE)"+
+					"VALUES (DATEITEMAPP_SEQ.NEXTVAL,?,?,?,?,?,?)";
 	private static final String GETALL = 
-			"SELECT APPNO, MEMNO, DATEITEMNO, APPTITLE, APPTEXT, APPIMG, APPDATE, APPSTATE FROM DATEITEMAPP";
+			"SELECT APPNO, MEMNO, DATEITEMNO, APPTITLE, APPTEXT, APPDATE, APPSTATE FROM DATEITEMAPP";
 	private static final String GETONE =
-			"SELECT APPNO, MEMNO, DATEITEMNO, APPTITLE, APPTEXT, APPIMG, APPDATE, APPSTATE FROM DATEITEMAPP WHERE APPNO = ? ";
+			"SELECT APPNO, MEMNO, DATEITEMNO, APPTITLE, APPTEXT, APPDATE, APPSTATE FROM DATEITEMAPP WHERE APPNO = ? ";
 	private static final String UPDATE =
-			"UPDATE DATEITEMAPP SET DATEITEMNO=?, APPTITLE=?, APPTEXT=?, APPIMG=?, APPDATE=?, APPSTATE=? WHERE APPNO=?";
+			"UPDATE DATEITEMAPP SET DATEITEMNO=?, APPTITLE=?, APPTEXT=?, APPDATE=?, APPSTATE=? WHERE APPNO=?";
 	private static final String DELETE=
 			"DELETE FROM DATEITEMAPP WHERE APPNO=?";	
 	
@@ -47,9 +47,9 @@ public class DateItemAppJDBC implements DateItemApp_Interface{
 			pstmt.setInt(2, dateItemApp.getDateItemNo());
 			pstmt.setString(3, dateItemApp.getAppTitle());
 			pstmt.setClob(4, clob);
-			pstmt.setBytes(5, dateItemApp.getAppImg());
-			pstmt.setDate(6, dateItemApp.getAppDate());
-			pstmt.setInt(7, dateItemApp.getAppState());
+			
+			pstmt.setDate(5, dateItemApp.getAppDate());
+			pstmt.setInt(6, dateItemApp.getAppState());
 			
 			pstmt.executeUpdate();
 			
@@ -97,10 +97,10 @@ public class DateItemAppJDBC implements DateItemApp_Interface{
 			pstmt.setInt(1, dateItemApp.getDateItemNo());
 			pstmt.setString(2, dateItemApp.getAppTitle());
 			pstmt.setClob(3, clob);
-			pstmt.setBytes(4, dateItemApp.getAppImg());
-			pstmt.setDate(5, dateItemApp.getAppDate());
-			pstmt.setInt(6, dateItemApp.getAppState());
-			pstmt.setInt(7, dateItemApp.getAppNo());
+			
+			pstmt.setDate(4, dateItemApp.getAppDate());
+			pstmt.setInt(5, dateItemApp.getAppState());
+			pstmt.setInt(6, dateItemApp.getAppNo());
 			
 			pstmt.executeUpdate();
 			
@@ -195,7 +195,7 @@ public class DateItemAppJDBC implements DateItemApp_Interface{
 				dateItemApp.setDateItemNo(rs.getInt("dateitemno"));
 				dateItemApp.setAppTitle(rs.getString("apptitle"));
 				dateItemApp.setAppText(rs.getString("apptext"));
-				dateItemApp.setAppImg(rs.getBytes("appimg"));
+				
 				dateItemApp.setAppDate(rs.getDate("appdate"));
 				dateItemApp.setAppState(rs.getInt("appstate"));
 			}
@@ -256,7 +256,7 @@ public class DateItemAppJDBC implements DateItemApp_Interface{
 				dateItemApp.setDateItemNo(rs.getInt("dateitemno"));
 				dateItemApp.setAppTitle(rs.getString("apptitle"));
 				dateItemApp.setAppText(rs.getString("apptext"));
-				dateItemApp.setAppImg(rs.getBytes("appimg"));
+				
 				dateItemApp.setAppDate(rs.getDate("appdate"));
 				dateItemApp.setAppState(rs.getInt("appstate"));
 				list.add(dateItemApp);
@@ -305,7 +305,7 @@ public class DateItemAppJDBC implements DateItemApp_Interface{
 //		dateitemapp.setDateItemNo(4007);
 //		dateitemapp.setAppText("我好想肥家");
 //		dateitemapp.setAppTitle("今天星期五");
-//		dateitemapp.setAppImg(null);
+//		
 //		dateitemapp.setAppDate( java.sql.Date.valueOf("2014-3-21"));
 //		dateitemapp.setAppState(0);
 //		dao.insert(dateitemapp);
@@ -316,7 +316,7 @@ public class DateItemAppJDBC implements DateItemApp_Interface{
 //		dateitemapp.setDateItemNo(4003);
 //		dateitemapp.setAppText("家");
 //		dateitemapp.setAppTitle("星期五");
-//		dateitemapp.setAppImg(null);
+//		
 //		dateitemapp.setAppDate( java.sql.Date.valueOf("2012-3-5"));
 //		dateitemapp.setAppState(1);
 //		dao.update(dateitemapp);
@@ -332,7 +332,7 @@ public class DateItemAppJDBC implements DateItemApp_Interface{
 //		System.out.print(dateitemapp.getAppTitle()+" ,");
 //		System.out.print(dateitemapp.getAppText()+" ,");
 //		System.out.print(dateitemapp.getAppDate()+" ,");
-//		System.out.print(dateitemapp.getAppImg()+" ,");
+//		
 //		System.out.print(dateitemapp.getAppState());
 //		System.out.println();
 		
@@ -346,7 +346,7 @@ public class DateItemAppJDBC implements DateItemApp_Interface{
 			System.out.print(dateitemapp.getAppTitle()+" ,");
 			System.out.print(dateitemapp.getAppText()+" ,");
 			System.out.print(dateitemapp.getAppDate()+" ,");
-			System.out.print(dateitemapp.getAppImg()+" ,");
+			
 			System.out.print(dateitemapp.getAppState());
 			System.out.println();
 		}

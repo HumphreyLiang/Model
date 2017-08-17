@@ -60,5 +60,8 @@ public class DiaMsgService {
 		return dao.getAllMsgFromDia(diaNo);
 	}
 	
+	public Integer getCurrNo(){
+		return dao.getCurrDiaMsgNo();
+	}
 	
 }

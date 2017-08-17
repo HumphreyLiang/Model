@@ -1,11 +1,14 @@
 package com.appreprec.model;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 public class AppRepRecJDBC implements AppRepRec_Interface{
@@ -21,6 +24,8 @@ public class AppRepRecJDBC implements AppRepRec_Interface{
 			"SELECT MEMNO,RECDATE FROM APPREPREC ORDER BY MEMNO";
 	private static final String GETONE =
 			"SELECT MEMNO,RECDATE FROM APPREPREC WHERE MEMNO = ?";
+	private static final String GETONEMEMTIMES =
+			"select memno,recdate from appreprec where memno=? order by recdate desc";
 	private static final String DELETE=
 			"DELETE FROM APPREPREC WHERE MEMNO = ? AND RECDATE = ?";
 	
@@ -248,13 +253,86 @@ public class AppRepRecJDBC implements AppRepRec_Interface{
 		
 		
 		//query all 
-		List<AppRepRec> list =dao.getAll();
-		for(AppRepRec appRepRec : list){
-			System.out.print(appRepRec.getMemNo()+", ");
-			System.out.print(appRepRec.getRecDate());
-			System.out.println();
-		}
+//		List<AppRepRec> list =dao.getAll();
+//		for(AppRepRec appRepRec : list){
+//			System.out.print(appRepRec.getMemNo()+", ");
+//			System.out.print(appRepRec.getRecDate());
+//			System.out.println();
+//		}
 		
+		//query 1
+		Integer rows =dao.findOneMonthTimes(5001);
+		
+			System.out.print(rows);
+			
+		
+		
+		
+		
+		
+	}
+
+
+	@Override
+	public Integer findOneMonthTimes(Integer memNo) {
+		
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		Integer rows = 0; 
+		try{
+			Class.forName(driver);
+			con = DriverManager.getConnection(url, userid, passwd);
+			pstmt = con.prepareStatement(GETONEMEMTIMES);
+			Calendar nextrow = null;			
+			pstmt.setInt(1,memNo);
+			rs = pstmt.executeQuery();
+			
+			Calendar cal = new GregorianCalendar();			
+			cal.setTimeInMillis(System.currentTimeMillis());
+			cal.set(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DATE)-30);//找出以上架當天前30天內的檢舉申訴
+			System.out.println(cal.getTime());
+			while(rs.next()){
+				nextrow = new GregorianCalendar();
+				nextrow.setTime(rs.getDate("recdate"));
+				if(nextrow.getTimeInMillis() > cal.getTimeInMillis() ){
+					rows++;
+				}	
+			}
+	
+			
+		}catch (ClassNotFoundException e) {
+			throw new RuntimeException("Couldn't load database driver. "
+					+ e.getMessage());
+			// Handle any SQL errors
+		} catch (SQLException se) {
+			throw new RuntimeException("A database error occured. "
+					+ se.getMessage());
+			// Clean up JDBC resources
+		} finally {
+			if (rs != null) {
+				try {
+					rs.close();
+				} catch (SQLException se) {
+					se.printStackTrace(System.err);
+				}
+			}
+			if (pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (SQLException se) {
+					se.printStackTrace(System.err);
+				}
+			}
+			if (con != null) {
+				try {
+					con.close();
+				} catch (Exception e) {
+					e.printStackTrace(System.err);
+				}
+			}
+		}
+		return rows;
 	}
 
 

@@ -19,8 +19,8 @@ import com.dateitem.model.DateItemJDBCDAO;
 import com.dateitem.model.DateItemVO;
 import com.dateitemapp.model.DateItemApp;
 import com.dateitemapp.model.DateItemAppJDBC;
-import com.dateitmerep.model.DateItemRep;
-import com.dateitmerep.model.DateItemRepJDBC;
+import com.dateitemrep.model.DateItemRep;
+import com.dateitemrep.model.DateItemRepJDBC;
 import com.diary.model.Diary;
 import com.diary.model.DiaryJDBCDAO;
 import com.member.model.Member;
@@ -144,7 +144,7 @@ public class InsertDummyBlob2 {
     	DateItemApp dateItemApp=dao.findByPrimaryKey(app++);
         try {
 			byte[] b = getPictureByteArray(file);
-			dateItemApp.setAppImg(b);
+			//dateItemApp.setAppImg(b);
 			dao.update(dateItemApp);
 		} catch (IOException e) {
 			e.printStackTrace();

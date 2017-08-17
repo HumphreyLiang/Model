@@ -32,14 +32,14 @@ public class DateItemAppDAO implements DateItemApp_Interface{
 	}
 	
 	private static final String INSERT = 
-			"INSERT INTO DATEITEMAPP(APPNO, MEMNO, DATEITEMNO, APPTITLE, APPTEXT, APPIMG, APPDATE, APPSTATE)"+
-					"VALUES (DATEITEMAPP_SEQ.NEXTVAL,?,?,?,?,?,?,?)";
+			"INSERT INTO DATEITEMAPP(APPNO, MEMNO, DATEITEMNO, APPTITLE, APPTEXT, APPDATE, APPSTATE)"+
+					"VALUES (DATEITEMAPP_SEQ.NEXTVAL,?,?,?,?,?,?)";
 	private static final String GETALL = 
-			"SELECT APPNO, MEMNO, DATEITEMNO, APPTITLE, APPTEXT, APPIMG, APPDATE, APPSTATE FROM DATEITEMAPP";
+			"SELECT APPNO, MEMNO, DATEITEMNO, APPTITLE, APPTEXT, APPDATE, APPSTATE FROM DATEITEMAPP ORDER BY APPDATE";
 	private static final String GETONE =
-			"SELECT APPNO, MEMNO, DATEITEMNO, APPTITLE, APPTEXT, APPIMG, APPDATE, APPSTATE FROM DATEITEMAPP WHERE APPNO = ? ";
+			"SELECT APPNO, MEMNO, DATEITEMNO, APPTITLE, APPTEXT, APPDATE, APPSTATE FROM DATEITEMAPP WHERE APPNO = ? ";
 	private static final String UPDATE =
-			"UPDATE DATEITEMAPP SET DATEITEMNO=?, APPTITLE=?, APPTEXT=?, APPIMG=?, APPDATE=?, APPSTATE=? WHERE APPNO=?";
+			"UPDATE DATEITEMAPP SET DATEITEMNO=?, APPTITLE=?, APPTEXT=?, APPDATE=?, APPSTATE=? WHERE APPNO=?";
 	private static final String DELETE=
 			"DELETE FROM DATEITEMAPP WHERE APPNO=?";
 	
@@ -60,10 +60,9 @@ public class DateItemAppDAO implements DateItemApp_Interface{
 			pstmt.setInt(1, dateItemApp.getMemNo());
 			pstmt.setInt(2, dateItemApp.getDateItemNo());
 			pstmt.setString(3, dateItemApp.getAppTitle());
-			pstmt.setClob(4, clob);
-			pstmt.setBytes(5, dateItemApp.getAppImg());
-			pstmt.setDate(6, dateItemApp.getAppDate());
-			pstmt.setInt(7, dateItemApp.getAppState());
+			pstmt.setClob(4, clob);			
+			pstmt.setDate(5, dateItemApp.getAppDate());
+			pstmt.setInt(6, dateItemApp.getAppState());
 			
 			pstmt.executeUpdate();
 			
@@ -105,11 +104,10 @@ public class DateItemAppDAO implements DateItemApp_Interface{
 			
 			pstmt.setInt(1, dateItemApp.getDateItemNo());
 			pstmt.setString(2, dateItemApp.getAppTitle());
-			pstmt.setClob(3, clob);
-			pstmt.setBytes(4, dateItemApp.getAppImg());
-			pstmt.setDate(5, dateItemApp.getAppDate());
-			pstmt.setInt(6, dateItemApp.getAppState());
-			pstmt.setInt(7, dateItemApp.getAppNo());
+			pstmt.setClob(3, clob);			
+			pstmt.setDate(4, dateItemApp.getAppDate());
+			pstmt.setInt(5, dateItemApp.getAppState());
+			pstmt.setInt(6, dateItemApp.getAppNo());
 			
 			pstmt.executeUpdate();
 			
@@ -194,7 +192,6 @@ public class DateItemAppDAO implements DateItemApp_Interface{
 				dateItemApp.setDateItemNo(rs.getInt("dateitemno"));
 				dateItemApp.setAppTitle(rs.getString("apptitle"));
 				dateItemApp.setAppText(rs.getString("apptext"));
-				dateItemApp.setAppImg(rs.getBytes("appimg"));
 				dateItemApp.setAppDate(rs.getDate("appdate"));
 				dateItemApp.setAppState(rs.getInt("appstate"));
 			}
@@ -250,7 +247,6 @@ public class DateItemAppDAO implements DateItemApp_Interface{
 				dateItemApp.setDateItemNo(rs.getInt("dateitemno"));
 				dateItemApp.setAppTitle(rs.getString("apptitle"));
 				dateItemApp.setAppText(rs.getString("apptext"));
-				dateItemApp.setAppImg(rs.getBytes("appimg"));
 				dateItemApp.setAppDate(rs.getDate("appdate"));
 				dateItemApp.setAppState(rs.getInt("appstate"));
 				list.add(dateItemApp);

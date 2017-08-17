@@ -1,4 +1,4 @@
-package com.dateitmerep.model;
+package com.dateitemrep.model;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

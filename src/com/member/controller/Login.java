@@ -60,7 +60,7 @@ public class Login extends HttpServlet {
 				res.sendRedirect(location);
 				return;
 			}
-			res.sendRedirect(req.getContextPath() + "/front_end/member/index.jsp");
+			res.sendRedirect(req.getContextPath() + "/front_end/index.jsp");
 		}
 
 	}

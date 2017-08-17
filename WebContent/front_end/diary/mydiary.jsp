@@ -4,6 +4,7 @@
 <%@ page import="com.diary.model.*"%>
 <%@ page import="com.member.model.*"%>
 <%@ page import="com.submem.model.*"%>
+<%@ page import="com.letter.model.*"%>
 <%@ page import="java.io.*"%>
 <%@ page import="java.util.*"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -39,10 +40,21 @@
 	<script src="https://code.jquery.com/jquery.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
 </head>
+<style>
+.img-bg{
+    opacity:1;
+    background-color:#ccc;
+    max-width: 100%;
+    display: block;
+    margin: 0 auto;
+}
+</style>
 <body>
-	<%@ include file="navbar.file" %>
+	<%@ include file="/front_end/frontEndNavBar.file"%>
     <%@ include file="leftbar.file" %>
-    <%@ include file="ad.file" %>
+    
+    <div class="col-xs-12 col-sm-8 " >
+                <div class="row">
     
                 <h5 class="page-header text-right">目前位置:日誌首頁</h5>
                 <%@ include file="page1.file" %>
@@ -114,107 +126,34 @@
                             		<img src="<%=request.getContextPath()%>/front_end/diary/ShowImage?diano=${diary.diaNo}" style='height:auto;width:auto;display:${empty diary.diaImg ? "none":""};'></img>
                             	</div>
                             </div>
-                            
                             <!-- 新增留言區 -->
                             <div  class="panel-body" >	
-                             	<div style="padding-top:10px ; ">
-                            		<form action="<%=request.getContextPath()%>/front_end/diary/diaMsg.do" method=post style="display:inline;">
-										<input type="hidden" name="diano" value="${ diary.diaNo }"> 
-										<input type="hidden" name="action" value="insert">
-										<input type="hidden" name="whichPage" value="<%= whichPage %>">
-										<input type="hidden" name="backpath" value="<%= request.getServletPath() %>" >
-										<textarea rows="2" cols="60" name="diamsgtext" placeholder="留言......" ></textarea>
-										<input type="submit" value="送出" ><br>
-									</form>
-                            	</div>
+                            	<c:if test="${ !empty member  }">
+	                             	<div style="padding-top:10px ; ">	                            		
+											<input type="hidden" name="diano" value="${ diary.diaNo }"> 
+											<textarea rows="2" cols="60" name="diamsgtext" placeholder="留言......" ></textarea>
+											<input type="submit" value="送出" onclick="insertMsg(this);"><br>										
+	                            	</div>
+	                            </c:if>
 							<!--  秀出留言區    -->                            		
-                            		<c:forEach var="diamsg" items="${diaMsgSvc.getAllMsgFromDia(diary.diaNo)}">
-                            			<div class="" id="msgall${diamsg.diaMsgNo}" style="border-top:1px black solid;">
-                            				<div id="msg${diamsg.diaMsgNo}">
-                            					<p style="margin:0px;">${diamsg.diaMsgText }</p>
-                            				</div>	
-	                            				<div class="text-right" >
-	                            				    <fmt:formatDate value="${diamsg.diaMsgTime }" pattern="yyyy-MM-dd HH:mm:ss"/>	                            				
-	                            					${memSvc.getOneMember(diamsg.memNo).getMemSname()}
-<!-- 	                            					修改自己的留言區 -->
-	                            					<c:if test="${ diamsg.memNo==member.memNo}">
-															
-															<input type="hidden"  id="dia${diamsg.diaMsgNo }" value="${ diamsg.diaMsgNo }"> 
-															<input type="button" value="修改" id="btmod${diamsg.diaMsgNo }" >
-															<input type="button" value="刪除" id="btdel${diamsg.diaMsgNo }">
-														
-														<script type="text/javascript">
-															
-															var diamsg${diamsg.diaMsgNo} = document.getElementById("dia${diamsg.diaMsgNo}");
-										                	var btm${diamsg.diaMsgNo} = $('#btmod${diamsg.diaMsgNo}');
-										                	var btd${diamsg.diaMsgNo} = $('#btdel${diamsg.diaMsgNo}');
-										                	btm${diamsg.diaMsgNo}.click(function(){
-											                		if(this.value=="修改"){
-																		$('<textarea>').attr("cols","62").text($("#msg${diamsg.diaMsgNo}>p").text()).appendTo($('#msg${diamsg.diaMsgNo}'));
-												                	
-												                		$('#msg${diamsg.diaMsgNo}>p').remove();
-												                		this.value = '確定';
-												                		btd${diamsg.diaMsgNo}.val('取消');
-											                		}else if(this.value=="確定"){
-											                			
-											                			$.ajax({ 
-											            					url : "<%=request.getContextPath()%>/front_end/diary/diaMsg.do",
-											            					data : {
-											            						action : 'update',
-											            						diamsgtext : $("#msg${diamsg.diaMsgNo}").find('textarea').val(),
-											            						diamsgno : diamsg${diamsg.diaMsgNo}.value
-											            						
-											            					},
-											            					type : 'POST',
-											            					error : function(xhr) {
-											            						alert('Ajax request 發生錯誤');
-											            					},
-											            					success : function(result) {
-											            						
-											            						var textarea = $("#msg${diamsg.diaMsgNo}").find('textarea');
-											            						$('<p>').css("margin","0px").text(textarea.val()).appendTo($('#msg${diamsg.diaMsgNo}')); 										            						
-											            						textarea.remove();
-											            					}
-											            				});
-											            				this.value = "修改";
-											            				btd${diamsg.diaMsgNo}.val('刪除');
-											                		}	
-												            	});
-										                	btd${diamsg.diaMsgNo}.click(function(){
-										                		if(this.value=="刪除"){
-										                			$.ajax({ 
-										            					url : "<%=request.getContextPath()%>/front_end/diary/diaMsg.do",
-										            					data : {
-										            						action : 'delete',
-										            						diamsgno : diamsg${diamsg.diaMsgNo}.value	
-										            					},
-										            					type : 'POST',
-										            					error : function(xhr) {
-										            						alert('Ajax request 發生錯誤');
-										            					},
-										            					success : function(result) {
-										            						 $("#msgall${diamsg.diaMsgNo}").remove();
-										            						
-										            					}
-										            				});
-										                		}else if(this.value=="取消"){
-										                			var textarea = $("#msg${diamsg.diaMsgNo}").find('textarea');
-								            						$('<p>').css("margin","0px").text(textarea.text()).appendTo($('#msg${diamsg.diaMsgNo}')); 										            						
-								            						textarea.remove();
-								            						
-								            						this.value="刪除";
-								            						btm${diamsg.diaMsgNo}.val("修改");
-										                		}
-										                		
-										                		
-										                	});
-										                	
- 	                									</script> 
-	                            					</c:if>
-	                            				</div>	                            				
-                            			</div>
-                            		</c:forEach>
-                            </div>
+                            	<c:forEach var="diamsg" items="${diaMsgSvc.getAllMsgFromDia(diary.diaNo)}">
+                            		<div class="" style="border-top:1px black solid;">
+                            			<div >
+                            				<p style="margin:0px;">${diamsg.diaMsgText }</p>
+                            			</div>	
+		                            	<div class="text-right" >
+		                            		<fmt:formatDate value="${diamsg.diaMsgTime }" pattern="yyyy-MM-dd HH:mm:ss"/>	                            				
+		                            			${memSvc.getOneMember(diamsg.memNo).getMemSname()}
+							<!--  修改自己的留言區 -->
+		                            		<c:if test="${ diamsg.memNo==member.memNo}">											
+												<input type="hidden" value="${ diamsg.diaMsgNo }"> 
+												<input type="button" value="修改" onclick="updateMsg(this);" >
+												<input type="button" value="刪除" onclick="deleteMsg(this);">
+		                            		</c:if>
+		                            	</div>	                            				
+                            		</div>
+                            		</c:forEach>	
+                            </div>        
                             
                                                  
                     </div>
@@ -239,6 +178,97 @@
 <!--                         <li><a href="#">下一頁</a></li> -->
 <!--                     </ul> -->
                 </div>
-                <%@ include file="bottom.file" %>
+                <%@ include file="/front_end/frontEndButtom.file"%>
+             </div>
+           </div>   
+ 		<script type="text/javascript">
+			function insertMsg(e){
+				var diaNo = $(e).prev().prev().val();
+				var diaMsgText = $(e).prev().val();
+				$.ajax({ 
+					url : "<%=request.getContextPath()%>/front_end/diary/diaMsg.do",
+					data : {
+						action : 'insert',
+						diamsgtext : diaMsgText,
+						diano : diaNo
+											            						
+					},
+					type : 'POST',
+					error : function(xhr) {
+						alert('Ajax request 發生錯誤');
+						},
+					success : function(data) {		
+						var obj = JSON.parse(data);//轉成json格式	
+						$('<div>').attr({"class":"","id":"newMsg"}).css("border-top","1px black solid").appendTo($(e).parent().parent());
+						$('<div>').attr("id","newP").appendTo('#newMsg');
+						$('<p>').css("margin","0px").text(diaMsgText).appendTo('#newP');
+						$('<div>').attr({"class":"text-right","id":"newName"}).text(obj.diaMsgTime+" "+obj.sname+" ").appendTo('#newMsg');
+						$('<input>').attr({"type":"hidden","value":obj.curr}).appendTo('#newName');
+						$('<input>').attr({"type":"button","value":"修改","onclick":"updateMsg(this);"}).appendTo('#newName');
+						$('<input>').attr({"type":"button","value":"刪除","onclick":"deleteMsg(this);"}).appendTo('#newName');
+						$('#newMsg').removeAttr('id');
+						$('#newP').removeAttr('id');
+						$('#newName').removeAttr('id');
+					}
+				});
+				
+			}											
+			function updateMsg(e){
+				if($(e).val()=="修改"){					
+					$('<textarea>').attr("cols","62").css("resize","none").text($(e).parent().prev().find('p').text()).appendTo($(e).parent().prev());									                	
+					$(e).parent().prev().find('p').remove();
+					$(e).val('確定');
+					$(e).next().val('取消');
+				}else if($(e).val()=="確定"){
+											                			
+					$.ajax({ 
+						url : "<%=request.getContextPath()%>/front_end/diary/diaMsg.do",
+						data : {
+							action : 'update',
+							diamsgtext : $(e).parent().prev().find('textarea').val(),
+							diamsgno : $(e).prev().val()											            						
+						},
+						type : 'POST',
+						error : function(xhr) {
+							alert('Ajax request 發生錯誤');
+							},
+						success : function(result) {			            						
+							var textarea = $(e).parent().prev().find('textarea');
+							$('<p>').css("margin","0px").text(textarea.val()).appendTo($(e).parent().prev()); 										            						
+							textarea.remove();
+							}
+							});
+						$(e).val('修改');
+						$(e).next().val('刪除');
+							}	
+					}
+			function deleteMsg(e){
+				if($(e).val()=="刪除"){
+					$.ajax({ 
+						url : "<%=request.getContextPath()%>/front_end/diary/diaMsg.do",
+						data : {
+							action : 'delete',
+							diamsgno : $(e).prev().prev().val()	
+						},
+						type : 'POST',
+						error : function(xhr) {
+							alert('Ajax request 發生錯誤');
+						},
+						success : function(result) {
+							 $(e).parent().parent().remove();
+										            						
+						}
+					});
+				}else if($(e).val()=="取消"){
+					var textarea = $(e).parent().prev().find('textarea');
+					$('<p>').css("margin","0px").text(textarea.text()).appendTo($(e).parent().prev()); 										            						
+					textarea.remove();
+								            						
+					$(e).val('刪除');
+					$(e).prev().val("修改");
+				}
+			}
+										                	
+ 		</script>                   
 </body>
 </html>

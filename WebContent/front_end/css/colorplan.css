@@ -8,6 +8,8 @@
 }
 
 
+
+
 div>h2{
     color:#0d6301;
     !important;
@@ -35,6 +37,13 @@ body{
   margin:0px;
 }
 
+.img-bg{
+    opacity:1;
+    background-color:#ccc;
+    max-width: 100%;
+    display: block;
+    margin: 0 auto;
+}
 
     .auto-center{
 margin-top: 0;
@@ -75,8 +84,8 @@ width:100%;
 .panel-collapse .list-group-item {border-radius:0;}
 
 .postion-left-group{
-  position:relative;
-  margin-top: 28rem;
+  
+  margin-top:2rem;
   display:block;
 }
 

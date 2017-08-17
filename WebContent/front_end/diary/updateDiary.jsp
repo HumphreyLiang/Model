@@ -3,6 +3,7 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ page import="com.diary.model.*"%>
 <%@ page import="com.member.model.*"%>
+<%@ page import="com.letter.model.*"%>
 <%@ page import="java.io.*"%>
 <%@ page import="java.util.*"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -26,11 +27,21 @@
 	<script src="https://code.jquery.com/jquery.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
 </head>
+<style>
+.img-bg{
+    opacity:1;
+    background-color:#ccc;
+    max-width: 100%;
+    display: block;
+    margin: 0 auto;
+}
+</style>
 <body>
 	
-	<%@ include file="navbar.file" %>
+	<%@ include file="/front_end/frontEndNavBar.file"%>
     <%@ include file="leftbar.file" %>
-    <%@ include file="ad.file" %>
+    <div class="col-xs-12 col-sm-8 " >
+                <div class="row">
     
                 <h5 class="page-header text-right">目前位置:日誌首頁</h5>
                 
@@ -67,6 +78,8 @@
                 	</div>
                 </div>
 
-                <%@ include file="bottom.file" %>
+                <%@ include file="/front_end/frontEndButtom.file"%>
+              </div>
+             </div>
 </body>
 </html>

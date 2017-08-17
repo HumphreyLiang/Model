@@ -1,4 +1,4 @@
-package com.dateitmerep.model;
+package com.dateitemrep.model;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -32,7 +32,7 @@ public class DateItemRepDAO implements DateItemRep_Interface{
 	private static final String INSERT = 
 			"INSERT INTO DATEITEMREP(REPNO, MEMNO, DATEITEMNO , REPTEXT,REPDATE, REPSTATE ) VALUES (DATEITEMREP_SEQ.NEXTVAL,?,?,?,?,?)";
 	private static final String GETALL = 
-			"SELECT REPNO, MEMNO, DATEITEMNO , REPTEXT,REPDATE, REPSTATE FROM DATEITEMREP ORDER BY REPNO";
+			"SELECT REPNO, MEMNO, DATEITEMNO , REPTEXT,REPDATE, REPSTATE FROM DATEITEMREP ORDER BY REPDATE";
 	private static final String GETONE =
 			"SELECT REPNO, MEMNO, DATEITEMNO , REPTEXT,REPDATE, REPSTATE FROM DATEITEMREP WHERE REPNO = ?";
 	private static final String UPDATE =

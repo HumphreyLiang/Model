@@ -44,6 +44,8 @@ public class DiaMsgDAO implements DiaMsgDAO_Interface{
 			"DELETE FROM DIAMSG WHERE DIAMSGNO=?";
 	private static final String GETMSGFROMDIARY =
 			"SELECT DIAMSGNO, DIANO, MEMNO, DIAMSGTEXT, DIAMSGTIME, DIAMSGSTATE FROM DIAMSG WHERE DIANO = ? ORDER BY DIAMSGTIME";
+	private static final String GETCURRVAL =
+			"SELECT DIAMSG_SEQ.CURRVAL FROM DUAL";
 	
 	@Override
 	public void insert(DiaMsg diaMsg) {
@@ -329,5 +331,48 @@ public class DiaMsgDAO implements DiaMsgDAO_Interface{
 		}
 		return list;
 	}
+
+	@Override
+	public Integer getCurrDiaMsgNo() {
+		
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		Integer curr = null;
+		try {
+
+			con = ds.getConnection();
+			pstmt = con.prepareStatement(GETCURRVAL);
+			rs = pstmt.executeQuery();
+			rs.next();
+			curr =new Integer(rs.getInt(1));
+		}catch(SQLException se){
+			se.printStackTrace();
+		}finally{
+			if(rs != null){
+				try{
+					rs.close();
+				}catch(SQLException se){
+					se.printStackTrace(System.err);
+				}
+			}
+			if(pstmt != null){
+				try{
+					pstmt.close();
+				}catch(SQLException se){
+					se.printStackTrace(System.err);
+				}
+			}
+			if(con != null){
+				try{
+					con.close();
+				}catch(Exception e){
+					e.printStackTrace(System.err);
+				}
+			}
+		}
+		return curr;
+	}
+
 
 }

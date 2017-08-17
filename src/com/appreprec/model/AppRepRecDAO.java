@@ -1,11 +1,14 @@
 package com.appreprec.model;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 import javax.naming.Context;
@@ -37,7 +40,8 @@ public class AppRepRecDAO implements AppRepRec_Interface{
 			"SELECT MEMNO,RECDATE FROM APPREPREC WHERE MEMNO = ?";
 	private static final String DELETE=
 			"DELETE FROM APPREPREC WHERE MEMNO = ? AND RECDATE = ?";
-	
+	private static final String GETONEMEMTIMES =
+			"select rownum,memno,recdate from(select memno,recdate from appreprec where memno=? order by recdate desc) where rownum <=3";
 	
 	
 	@Override
@@ -214,6 +218,63 @@ public class AppRepRecDAO implements AppRepRec_Interface{
 		}
 		return list;
 		
+	}
+
+	@Override
+	public Integer findOneMonthTimes(Integer memNo) {
+		
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		Integer rows = 0; 
+		try{
+			
+			con = ds.getConnection();
+			pstmt = con.prepareStatement(GETONEMEMTIMES);
+			Calendar nextrow = null;			
+			pstmt.setInt(1,memNo);
+			rs = pstmt.executeQuery();
+			
+			Calendar cal = new GregorianCalendar();			
+			cal.setTimeInMillis(System.currentTimeMillis());
+			cal.set(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DATE)-30);//找出以上架當天前30天內的檢舉申訴
+			System.out.println(cal.getTime());
+			while(rs.next()){
+				nextrow = new GregorianCalendar();
+				nextrow.setTime(rs.getDate("recdate"));
+				if(nextrow.getTimeInMillis() > cal.getTimeInMillis() ){
+					rows++;
+				}	
+			}
+
+		}catch (SQLException se) {
+			throw new RuntimeException("A database error occured. "
+					+ se.getMessage());
+			// Clean up JDBC resources
+		} finally {
+			if (rs != null) {
+				try {
+					rs.close();
+				} catch (SQLException se) {
+					se.printStackTrace(System.err);
+				}
+			}
+			if (pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (SQLException se) {
+					se.printStackTrace(System.err);
+				}
+			}
+			if (con != null) {
+				try {
+					con.close();
+				} catch (Exception e) {
+					e.printStackTrace(System.err);
+				}
+			}
+		}
+		return rows;
 	}
 
 }

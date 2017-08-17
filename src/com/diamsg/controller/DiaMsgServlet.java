@@ -1,9 +1,10 @@
 package com.diamsg.controller;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -13,6 +14,7 @@ import javax.servlet.http.HttpSession;
 import com.diamsg.model.DiaMsg;
 import com.diamsg.model.DiaMsgService;
 import com.member.model.Member;
+import com.member.model.MemberService;
 
 
 public class DiaMsgServlet extends HttpServlet {
@@ -30,9 +32,11 @@ public class DiaMsgServlet extends HttpServlet {
 		
 		req.setCharacterEncoding("utf-8");
 		res.setContentType("text/html; charset=Big5");
+		
+		PrintWriter out = res.getWriter();
+		
 		String action = req.getParameter("action");
 		
-		System.out.println(action);
 		
 		if("insert".equals(action)){
 			
@@ -62,19 +66,19 @@ public class DiaMsgServlet extends HttpServlet {
 			//*********加入留言的狀態為0****代表未刪除
 			Integer diaMsgState = new Integer(0);
 			
-			//開始修改資料給DiaMsgService
+			//開始新增資料給DiaMsgService
 			DiaMsgService dmgSvc= new DiaMsgService();
- 
 			dmgSvc.addDiaMsg(diaNo, memNo, diaMsgText, diaMsgTime, diaMsgState);
 			
-			//新增完成準備轉交
-			String diaMemNo = req.getParameter("diamemno");		//為了如果在個人網頁留言memNo會掉值
-			String whichPage = req.getParameter("whichPage");
-			String url = req.getParameter("backpath")+"?whichPage="+whichPage+"&memNo="+diaMemNo; 
-			System.out.println(url);
-			RequestDispatcher successView = req.getRequestDispatcher(url); // 修改成功後,轉交原網頁
-			successView.forward(req, res);
-	
+			//轉成json格式傳給前端
+			MemberService memSvc = new MemberService();
+			String Sname = memSvc.getOneMember(memNo).getMemSname();
+			SimpleDateFormat sdFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			String json = "{\"sname\":\""+Sname+"\",\"diaMsgTime\":\""+sdFormat.format(diaMsgTime)
+								+"\",\"curr\":\""+dmgSvc.getCurrNo()+"\"}";
+			out.println(json);
+			out.close();
+			
 		}
 		
 		if("update".equals(action)){
@@ -84,7 +88,7 @@ public class DiaMsgServlet extends HttpServlet {
 			Integer diaMsgNo = null;
 			try{
 				diaMsgNo =new Integer(req.getParameter("diamsgno"));
-				System.out.println(diaMsgNo);
+				
 			}catch(Exception e){
 				e.getMessage();
 			}
@@ -92,7 +96,7 @@ public class DiaMsgServlet extends HttpServlet {
 			String diaMsgText = null;
 			try{
 				diaMsgText =req.getParameter("diamsgtext");
-				System.out.println(diaMsgText);
+				
 			}catch(Exception e){
 				e.getMessage();
 			}
@@ -113,7 +117,7 @@ public class DiaMsgServlet extends HttpServlet {
 			Integer diaMsgNo = null;
 			try{
 				diaMsgNo =new Integer(req.getParameter("diamsgno"));
-				System.out.println(diaMsgNo);
+				
 			}catch(Exception e){
 				e.getMessage();
 			}

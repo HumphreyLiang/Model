@@ -10,7 +10,6 @@ public class DateItemApp implements Serializable{
 	private Integer dateItemNo;
 	private String  appTitle;
 	private String appText;
-	private byte[] appImg;
 	private Date appDate;
 	private Integer appState;
 	
@@ -44,12 +43,6 @@ public class DateItemApp implements Serializable{
 	}
 	public void setAppText(String appText) {
 		this.appText = appText;
-	}
-	public byte[] getAppImg() {
-		return appImg;
-	}
-	public void setAppImg(byte[] appImg) {
-		this.appImg = appImg;
 	}
 	public Date getAppDate() {
 		return appDate;

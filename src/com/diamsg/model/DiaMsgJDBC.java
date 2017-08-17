@@ -349,6 +349,14 @@ public class DiaMsgJDBC implements DiaMsgDAO_Interface{
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	@Override
+	public Integer getCurrDiaMsgNo() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	
 	
 	
 	

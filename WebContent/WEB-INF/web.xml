@@ -11,6 +11,33 @@
   </welcome-file-list>
 
 	<servlet>
+		<servlet-name>DateItemAppServlet</servlet-name>
+		<servlet-class>com.dateitemapp.controller.DateItemAppServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>DateItemAppServlet</servlet-name>
+		<url-pattern>/back_end/apprec/dateitemapp.do</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
+		<servlet-name>DateItemRepServlet</servlet-name>
+		<servlet-class>com.dateitemrep.controller.DateItemRepServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>DateItemRepServlet</servlet-name>
+		<url-pattern>/back_end/apprec/dateitemrep.do</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
+		<servlet-name>LetterServlet</servlet-name>
+		<servlet-class>com.letter.controller.LetterServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>LetterServlet</servlet-name>
+		<url-pattern>/front_end/letter/letter.do</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
 		<servlet-name>LetterTypeServlet</servlet-name>
 		<servlet-class>com.lettertype.controller.LetterTypeServlet</servlet-class>
 	</servlet>
@@ -65,7 +92,6 @@
 	    <url-pattern>/front_end/member/memberInfo.jsp</url-pattern>
 	    <url-pattern>/front_end/diary/mydiary.jsp</url-pattern>
 	    <url-pattern>/front_end/diary/manageSubMem.jsp</url-pattern>
-	    <url-pattern>/front_end/diary/diaMsg.do</url-pattern>
 	    <url-pattern>/front_end/letter/index_letter.jsp</url-pattern>
 	    <url-pattern>/front_end/letter/index_notRead.jsp</url-pattern>
 	    <url-pattern>/front_end/letter/index_tagLetter.jsp</url-pattern>

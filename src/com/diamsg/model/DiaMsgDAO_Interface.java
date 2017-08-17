@@ -11,5 +11,6 @@ public interface DiaMsgDAO_Interface {
 	public DiaMsg findByPrimaryKey(Integer diaMsgNo);
 	public List<DiaMsg> getAll();
 	public List<DiaMsg> getAllMsgFromDia(Integer diaNo);
+	public Integer getCurrDiaMsgNo();
 
 }
