@@ -54,8 +54,10 @@ public class DiaMsgServlet extends HttpServlet {
 			//**********取出留言的內容*****************
 			String diaMsgText = null;
 			try{
-				diaMsgText =req.getParameter("diamsgtext");
-				
+				diaMsgText =req.getParameter("diamsgtext").trim();
+				if(diaMsgText.equals("")){
+					diaMsgText = " ";
+				}
 			}catch(Exception e){
 				e.getMessage();
 			}
@@ -73,9 +75,9 @@ public class DiaMsgServlet extends HttpServlet {
 			//轉成json格式傳給前端
 			MemberService memSvc = new MemberService();
 			String Sname = memSvc.getOneMember(memNo).getMemSname();
-			SimpleDateFormat sdFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			SimpleDateFormat sdFormat = new SimpleDateFormat("HH:mm:ss yyyy/MM/dd ");
 			String json = "{\"sname\":\""+Sname+"\",\"diaMsgTime\":\""+sdFormat.format(diaMsgTime)
-								+"\",\"curr\":\""+dmgSvc.getCurrNo()+"\"}";
+								+"\",\"curr\":\""+dmgSvc.getCurrNo()+"\",\"memNo\":\""+memNo+"\"}";
 			out.println(json);
 			out.close();
 			
@@ -95,7 +97,7 @@ public class DiaMsgServlet extends HttpServlet {
 			//**********取出留言的內容*****************
 			String diaMsgText = null;
 			try{
-				diaMsgText =req.getParameter("diamsgtext");
+				diaMsgText =req.getParameter("diamsgtext").trim();
 				
 			}catch(Exception e){
 				e.getMessage();
@@ -106,7 +108,7 @@ public class DiaMsgServlet extends HttpServlet {
 			//開始修改資料給DiaMsgService
 			DiaMsgService dmgSvc= new DiaMsgService();
 			DiaMsg diaMsgOld = dmgSvc.getOneDiaMsg(diaMsgNo);
-			dmgSvc.updateDiaMsg(diaMsgNo, diaMsgOld.getDiaNo(), diaMsgOld.getMemNo(), diaMsgText, diaMsgOld.getDiaMsgTime(), diaMsgOld.getDiaMsgState());
+			//dmgSvc.updateDiaMsg(diaMsgNo, diaMsgOld.getDiaNo(), diaMsgOld.getMemNo(), diaMsgText, diaMsgOld.getDiaMsgTime(), diaMsgOld.getDiaMsgState());
 	
 		}
 		
@@ -124,7 +126,7 @@ public class DiaMsgServlet extends HttpServlet {
 						
 			//開始修改資料給DiaMsgService
 			DiaMsgService dmgSvc= new DiaMsgService();
-			dmgSvc.deleteDiaMsg(diaMsgNo);
+			//dmgSvc.deleteDiaMsg(diaMsgNo);
 			
 	
 		}
