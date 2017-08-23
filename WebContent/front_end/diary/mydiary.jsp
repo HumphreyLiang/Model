@@ -87,7 +87,7 @@
     <div class="col-xs-12 col-sm-8 " >
         <div class="row">
     
-                <h5 class="page-header text-right">目前位置:日誌首頁</h5>
+                <h5 class="page-header "></h5>
                 <%@ include file="page1.file" %>
                 
                 <%-- 錯誤表列 --%>
@@ -109,13 +109,13 @@
                 	  <div class="row">
 <!--                 	此為新增日誌區 -->
 						<form class="form-group" action="<%=request.getContextPath()%>/front_end/diary/diary.do" method=post enctype="multipart/form-data">
-							<input type="hidden" name="diano" value="${diary.diaNo}">
-							<input type="hidden" name="action" value="update">
+							
+							<input type="hidden" name="action" value="insert">
 							<div class="input-group">
 								<label class="input-group-addon">日誌</label>
-								<input type="text" name="dianame" class="form-control" value="${diary.diaName}" placeholder="Wirte down your title."><br>
+								<input type="text" name="dianame" class="form-control" placeholder="Wirte down your title."><br>
 							</div>
-							<textarea name="diatext" style="resize:none;height:80px;" class="form-control" placeholder="What's on your mind, ${memSvc.getOneMember(member.getMemNo()).getMemSname()}?">${diary.diaText}</textarea>
+							<textarea name="diatext" style="resize:none;height:80px;" class="form-control" placeholder="What's on your mind, ${memSvc.getOneMember(member.getMemNo()).getMemSname()}?"></textarea>
 							<input type="file" class="file" name="diaimg" >
 							<p>
 							<div  class="">	
@@ -179,7 +179,16 @@
                             </div>		
 		                    <div class="panel-body"> 
 		                        <div class="text-center">
-		                           <img src="<%=request.getContextPath()%>/front_end/diary/ShowImage?diano=${diary.diaNo}" style='height:auto;width:540px;display:${empty diary.diaImg ? "none":""};'></img>
+		                           <c:if test="${diary.diaImgExtName =='image' }" var="imgformat">
+			                         <img src="<%=request.getContextPath()%>/front_end/diary/ShowImage?diano=${diary.diaNo}" style='height:auto;width:540px;display:${empty diary.diaImg ? "none":""};'></img>
+			                         </c:if>
+			                         <c:if test="${!imgformat }">
+			                         <div style="max-height: auto;max-width:540px;" >
+										<video controls style="max-height: 80%;max-width: 80%;">
+											<source src="<%=request.getContextPath() %>/front_end/diary/DiaryVideo?diano=${diary.diaNo}" type="video/mp4" alt="您的瀏覽器不支援此撥放程式!!">
+										</video>
+									 </div>	                         
+			                      	 </c:if>
 		                        </div>
 		                    </div>
                        </div>

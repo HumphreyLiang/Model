@@ -82,6 +82,15 @@
     	<servlet-name>ShowImage</servlet-name>
     	<url-pattern>/front_end/diary/ShowImage</url-pattern>
   	</servlet-mapping>
+  	
+  	<servlet>
+    	<servlet-name>ShowDiaVideo</servlet-name>
+    	<servlet-class>com.diary.controller.ShowVideo</servlet-class>
+  	</servlet>
+  	<servlet-mapping>
+    	<servlet-name>ShowDiaVideo</servlet-name>
+    	<url-pattern>/front_end/diary/DiaryVideo</url-pattern>
+  	</servlet-mapping>
 	
 	<filter>
     	<filter-name>loginFilter</filter-name>

@@ -21,6 +21,7 @@
 <jsp:useBean id="memSvc" scope="page" class="com.member.model.MemberService"/>
 <jsp:useBean id="diaMsgSvc" scope="page" class="com.diamsg.model.DiaMsgService"/>
 
+
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=BIG5">
@@ -81,16 +82,9 @@
     <%@ include file="leftbar.file" %>
     <div class="col-xs-12 col-sm-8 " >
                 <div class="row">
-                <h5 class="page-header text-right">目前位置:個人頁面</h5>
+                <h5 class="page-header"></h5>
                 <%@ include file="page1.file" %> 
                 
-<!--                 	追蹤會員 -->
-                		<form action="<%=request.getContextPath()%>/front_end/diary/subMem.do" method=post>
-							<input type="hidden" name="action" value="insert">
-							<input type="hidden" name="beSubMemNo" value="<%= memNo %>">
-							<input type="submit" value="點我追蹤"><br>		
-						</form>
- 
           <c:forEach var="diary" items="${list}" begin="<%=pageIndex%>" end="<%=pageIndex+rowsPerPage-1%>">
              <div class="row">
                 <div class="panel panel-default col-sm-8 col-sm-offset-2 top-margin-sm dia-msg">
@@ -133,7 +127,27 @@
 		                   </div>
 		                   <div class="col-sm-10 padmarg">
 		                      <a href="<%=request.getContextPath()%>/front_end/diary/personalDiary.jsp?memNo=${diary.getMemNo()}" style="color:#191970;font-weight:bold;">${memSvc.getOneMember(diary.getMemNo()).getMemSname()}</a>
-		                      <span class="btn btn-default btn-xs"><img src="<%=request.getContextPath()%>/front_end/images/subscribe.png">追蹤會員</span>
+						
+						<!-- 追蹤訂閱 -->
+							  <c:set var="outcome" value="false" />	
+		                      <c:forEach var="submem" items="${submSvc.getMemberAct(member.memNo)}">
+		                      		<c:if test="${submem.beSubMemNo == diary.memNo }">
+		                      			<c:set var="outcome" value="true" />
+		                      		</c:if>			                      			                      		    		
+		                      </c:forEach>
+
+							  <input type="hidden" value="${diary.getMemNo()}">   
+		                      <span class="btn btn-default btn-xs" onclick="submem(this);">
+		                      		<img src="<%=request.getContextPath()%>/front_end/images/subscribe.png">	
+		                      	<c:if test="${outcome }">
+		                      		<span class="submember" style="color:red;font-weight:bold;">已追蹤</span>
+		                      	</c:if>
+		                      	<c:if test="${!outcome }">
+		                      		<span class="submember">追蹤會員</span>
+		                      	</c:if>
+		                      </span>	         
+		               <!-- 追蹤訂閱結束線 -->  
+		                              
 		                      <div style="font-size:10px;color:#BC8F8F;"><fmt:formatDate value="${empty diary.diaCreTime? diary.diaModTime:diary.diaCreTime}" pattern="HH:mm:ss yyyy/MM/dd"/></div>
 		                   </div>		                	 
 	                  </div> 
@@ -144,7 +158,16 @@
                        </div>		
 	                  <div class="panel-body"> 
 	                      <div class="text-center">
+	                         <c:if test="${diary.diaImgExtName =='image' }" var="imgformat">
 	                         <img src="<%=request.getContextPath()%>/front_end/diary/ShowImage?diano=${diary.diaNo}" style='height:auto;width:540px;display:${empty diary.diaImg ? "none":""};'></img>
+	                         </c:if>
+	                         <c:if test="${!imgformat }">
+	                         <div style="max-height: auto;max-width:540px;" >
+								<video controls style="max-height: 80%;max-width: 80%;">
+									<source src="<%=request.getContextPath() %>/front_end/diary/DiaryVideo?diano=${diary.diaNo}" type="video/mp4" alt="您的瀏覽器不支援此撥放程式!!">
+								</video>
+							 </div>	                         
+	                      	 </c:if>
 	                      </div>
 	                  </div>  
                    </div>
@@ -152,6 +175,8 @@
                 </div>                
              </div>
           </c:forEach>
+          
+          						
                
 <!--                 顯示頁數 -->
                 <div class="text-center">               	   
@@ -175,7 +200,48 @@
                 
                 </div>
               </div>
+              <script type="text/javascript">
+              		
+              		function submem(e){
+              			var besubmemno = $(e).prev().val();		
+              			if($(e).children('span').text()=='追蹤會員'){
+              				$.ajax({ 
+              					   url : "<%=request.getContextPath()%>/front_end/diary/subMem.do",
+             					   data : {
+             					     action : 'insert',
+             					     beSubMemNo : besubmemno    												            						
+             					  },
+             					   type : 'POST',
+             					   error : function(xhr) {
+             					     alert('Ajax request 發生錯誤');
+             					  },
+             					   success : function(data) {		
+             					     	
+             						  $('span.submember').text('已追蹤').css({"color":"red","font-weight":"bold"});
+              					    							
+             					  }
+             				});
+              			}else if($(e).children('span').text()=='已追蹤'){
+              				$.ajax({ 
+              					   url : "<%=request.getContextPath()%>/front_end/diary/subMem.do",
+             					   data : {
+             					     action : 'delete',
+             					     beSubMemNo : besubmemno    												            						
+             					  },
+             					   type : 'POST',
+             					   error : function(xhr) {
+             					     alert('Ajax request 發生錯誤');
+             					  },
+             					   success : function(data) {		  					     	
+             						  $('span.submember').text('追蹤會員').css({"color":"","font-weight":""});
+  							
+             					  }
+             				});
+              			}	
+              		}
+              		
               
+              </script>
        
 </body>
 </html>
